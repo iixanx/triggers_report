@@ -2032,6 +2032,13 @@
     <h2>실행 명령어</h2>
 
 ```bash
+npm i pnpm -g # pnpm install
+
+pnpm i # dependency install
+
+```
+
+```bash
 pnpm start:dev # Develop mode 실행
 
 pnpm start:prod # Production mode 실행
@@ -2052,30 +2059,3 @@ pnpm start:node # 빌드한 파일 실행
 <p id="4">
 <h1>회고</h1>
 </p>
-
-<!--
-    <details>
-      <summary>
-        <h3>POST /new</h3>
-        단어장에 단어를 추가합니다. <br/>
-        영단어와 한글 뜻을 입력할 수 있습니다.
-      </summary>
-      <h4>Request</h4>
-      <table>
-        <tr>
-          <th>위치</th>
-          <th>키</th>
-          <th>제약조건</th>
-        </tr>
-      </table>
-      <h4>Response</h4>
-      <table>
-        <tr>
-          <th>응답 코드</th>
-          <th>코드명</th>
-          <th>발생하는 경우</th>
-          <th>응답값</th>
-        </tr>
-      </table>
-    </details>
--->
