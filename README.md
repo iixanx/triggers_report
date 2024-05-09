@@ -1199,6 +1199,8 @@
                 <td>means</td>
                 <td>
                   <li>Type: Array < Object ></li>
+                  <li>Not Null</li>
+                  <li>Length : 4 (고정값)</li>
                   <table>
                     <tr>
                       <th>키</th>
@@ -1311,6 +1313,7 @@
                 <td>words</td>
                 <td>
                   <li>Type: Array < Object > </li>
+                  <li>Nullable</li>
                   <li>Max Length : 10</li>
                   <table>
                     <tr>
@@ -1600,9 +1603,422 @@
 관리자는 유저 리스트와, 유저의 단어장을 볼 수 있습니다.
 관리자는 유저가 푼 퀴즈 리스트와, 결과를 볼 수 있습니다.
 <ul>
-  <li></li>
-  <li></li>
-  <li></li>
+  <li>
+    <details>
+      <summary>
+        <h3>GET /users</h3>
+        사용자 목록을 확인할 수 있습니다. <br/>
+        페이지 당 최대 10명까지 조회 가능합니다.
+      </summary>
+      <h4>Request</h4>
+      <table>
+        <tr>
+          <th>위치</th>
+          <th>키</th>
+          <th>제약조건</th>
+        </tr>
+        <tr>
+          <td>Header</td>
+          <td>authorization</td>
+          <td>
+            <li>Type: String</li>
+            <li>Not Null</li>
+            <li>Access Token을 입력</li>
+            <li>Bearer Token</li>
+          </td>
+        </tr>
+        <tr>
+          <td>Query</td>
+          <td>page</td>
+          <td>
+            <li>Type: Number</li>
+            <li>Nullable (Default : 0)</li>
+            <li>0 <= page인 자연수</li>
+          </td>
+        </tr>
+      </table>
+      <h4>Response</h4>
+      <table>
+        <tr>
+          <th>응답 코드</th>
+          <th>코드명</th>
+          <th>발생하는 경우</th>
+          <th>응답값</th>
+        </tr>
+        <tr>
+          <td>200</td>
+          <td>OK</td>
+          <td>올바른 입력으로 요청에 성공하는 경우</td>
+          <td>
+            <table>
+              <tr>
+                <th>키</th>
+                <th>제약조건</th>
+              </tr>
+              <tr>
+                <td>users</td>
+                <td>
+                  <li>Type: Array < Object ></li>
+                  <li>Not Null</li>
+                  <li>Length : 0 ~ 10</li>
+                  <table>
+                    <tr>
+                      <th>키</th>
+                      <th>제약조건</th>
+                    </tr>
+                    <tr>
+                      <td>user_id</td>
+                      <td>
+                        <li>Type: Number</li>
+                        <li>Not Null</li>
+                        <li>0 <= user_id인 자연수</li>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>name</td>
+                      <td>
+                        <li>Type: String</li>
+                        <li>Not Null</li>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>email</td>
+                      <td>
+                        <li>Type: String</li>
+                        <li>Not Null</li>
+                        <li>Email 형식 필요</li>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>coin</td>
+                      <td>
+                        <li>Type: Number</li>
+                        <li>Not Null (Default 0)</li>
+                        <li>0 <= coin인 자연수</li>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>400</td>
+          <td>Bad Request</td>
+          <td>page 쿼리 파라미터가 Numeric하지 않을 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>401</td>
+          <td>Unauthorized</td>
+          <td>authorization 값이 유효하지 않은 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>403</td>
+          <td>Forbidden</td>
+          <td>인증 대상자의 사용자 정보에서 is_admin이 false인 경우 (관리자 권한 없는 사용자의 접근)</td>
+          </td>
+        </tr>
+        <tr>
+          <td>404</td>
+          <td>Not Found</td>
+          <td>(page 파라미터 + 1) × 10 − 10 + 1개만큼의 단어가 존재하지 않는 경우</td>
+          <!--(page 파라미터가 0일 경우 page × 10 + 1의 결과가 음수이므로 같은 결과를 낼 수 있도록 수식 변경-->
+        </tr>
+        <tr>
+          <td>500</td>
+          <td>Internal Server Error</td>
+          <td>서버 처리 오류</td>
+          <td/>
+        </tr>
+      </table>
+    </details>
+  </li>
+  <li>
+    <details>
+      <summary>
+        <h3>GET /user</h3>
+        특정 사용자의 단어장을 조회할 수 있습니다. <br/>
+        페이지 당 최대 10개의 단어를 조회할 수 있습니다.
+      </summary>
+      <h4>Request</h4>
+      <table>
+        <tr>
+          <th>위치</th>
+          <th>키</th>
+          <th>제약조건</th>
+        </tr>
+        <tr>
+          <td>Header</td>
+          <td>authorization</td>
+          <td>
+            <li>Type: String</li>
+            <li>Not Null</li>
+            <li>Access Token을 입력</li>
+            <li>Bearer Token</li>
+          </td>
+        </tr>
+        <tr>
+          <td>Query</td>
+          <td>user_id</td>
+          <td>
+            <li>Type: Number</li>
+            <li>Not Null<li>
+            <li>0 <= user_id인 자연수</li>
+          </td>
+        </tr>
+        <tr>
+          <td/>
+          <td>page</td>
+          <td>
+            <li>Type: Number</li>
+            <li>Nullable (Default : 0)</li>
+            <li>0 <= page인 자연수</li>
+          </td>
+        </tr>
+      </table>
+      <h4>Response</h4>
+      <table>
+        <tr>
+          <th>응답 코드</th>
+          <th>코드명</th>
+          <th>발생하는 경우</th>
+          <th>응답값</th>
+        </tr>
+        <tr>
+          <td>200</td>
+          <td>OK</td>
+          <td>올바른 입력으로 요청에 성공하는 경우</td>
+          <td>
+            <table>
+              <tr>
+                <th>키</th>
+                <th>제약조건</th>
+              </tr>
+              <tr>
+                <td>words</td>
+                <td>
+                  <li>Type: Array < Object ></li>
+                  <li>Nullable</li>
+                  <li>Max Length : 10</li>
+                  <table>
+                    <tr>
+                      <th>키</th>
+                      <th>제약조건</th>
+                    </tr>
+                    <tr>
+                      <td>word_id</td>
+                      <td>
+                        <li>Type: Number</li>
+                        <li>Not Null</li>
+                        <li>0 <= word_id인 자연수</li>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>word</td>
+                      <td>
+                        <li>Type: String</li>
+                        <li>Not Null</li>
+                        <li>A-Za-z의 정규식을 따르는 문자열</li>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>mean</td>
+                      <td>
+                        <li>Type: String</li>
+                        <li>Not Null</li>
+                      </td>
+                    </tr>
+                  </table>
+                <td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>400</td>
+          <td>Bad Request</td>
+          <td>user_id 또는 page 쿼리 파라미터가 Numeric하지 않음</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>401</td>
+          <td>Unauthorized</td>
+          <td>authorization의 값이 유효하지 않은 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>403</td>
+          <td>Forbidden</td>
+          <td>인증 대상자의 사용자 정보에서 is_admin이 false인 경우 (관리자 권한 없는 사용자의 접근)</td>
+          </td>
+        </tr>
+        <tr>
+          <td>404</td>
+          <td>Not Found</td>
+          <td>(page 파라미터 + 1) × 10 − 10 + 1개만큼의 단어가 존재하지 않는 경우</td>
+          <!--(page 파라미터가 0일 경우 page × 10 + 1의 결과가 음수이므로 같은 결과를 낼 수 있도록 수식 변경-->
+        </tr>
+        <tr>
+          <td>500</td>
+          <td>Internal Server Error</td>
+          <td>서버 처리 오류</td>
+          <td/>
+        </tr>
+      </table>
+    </details>
+  </li>
+  <li>
+    <details>
+      <summary>
+        <h3>GET /quiz</h3>
+        특정 사용자가 푼 퀴즈와 결과가 포함된 리스트를 조회합니다.
+      </summary>
+      <h4>Request</h4>
+      <table>
+        <tr>
+          <th>위치</th>
+          <th>키</th>
+          <th>제약조건</th>
+        </tr>
+        <tr>
+          <td>Header</td>
+          <td>authorization</td>
+          <td>
+            <li>Type: String</li>
+            <li>Not Null</li>
+            <li>Access Token을 입력</li>
+            <li>Bearer Token</li>
+          </td>
+        </tr>
+        <tr>
+          <td>Query</td>
+          <td>user_id</td>
+          <td>
+            <li>Type: Number</li>
+            <li>Not Null<li>
+            <li>0 <= user_id인 자연수</li>
+          </td>
+        </tr>
+        <tr>
+          <td/>
+          <td>page</td>
+          <td>
+            <li>Type: Number</li>
+            <li>Nullable (Default : 0)</li>
+            <li>0 <= page인 자연수</li>
+          </td>
+        </tr>
+      </table>
+      <h4>Response</h4>
+      <table>
+        <tr>
+          <th>응답 코드</th>
+          <th>코드명</th>
+          <th>발생하는 경우</th>
+          <th>응답값</th>
+        </tr>
+        <tr>
+          <td>200</td>
+          <td>OK</td>
+          <td>올바른 입력으로 요청에 성공하는 경우</td>
+          <td>
+            <table>
+              <tr>
+                <th>키</th>
+                <th>제약조건</th>
+              </tr>
+              <tr>  
+                <td>quizzes</td>
+                <td>
+                  <li>Type: Array < Object ></li>
+                  <li>Nullable</li>
+                  <li>Max Length : 10</li>
+                  <table>
+                    <tr>
+                      <th>키</th>
+                      <th>제약조건</th>
+                    </tr>
+                    <tr>
+                      <td>word_id</td>
+                      <td>
+                        <li>Type : Number</li>
+                        <li>Not Null</li>
+                        <li>0 <= word_id인 자연수</li>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>word</td>
+                      <td>
+                        <li>Type : String</li>
+                        <li>Not Null</li>
+                        <li>A-Za-z의 정규식을 따름</li>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>mean</td>
+                      <td>
+                        <li>Type : String</li>
+                        <li>Not Null</li>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>has_correct</td>
+                      <td>
+                        <li>Type : Boolean</li>
+                        <li>Not Null</li>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>earned_coin</td>
+                      <td>
+                        <li>Type : Number</li>
+                        <li>Nullable (if has_correct is false then null)</li>
+                        <li>Min : 1, Max : 13</li>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>400</td>
+          <td>Bad Request</td>
+          <td>user_id 또는 page 쿼리 파라미터가 Numeric하지 않음</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>401</td>
+          <td>Unauthorized</td>
+          <td>authorization의 값이 유효하지 않은 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>403</td>
+          <td>Forbidden</td>
+          <td>인증 대상자의 사용자 정보에서 is_admin이 false인 경우 (관리자 권한 없는 사용자의 접근)</td>
+          </td>
+        </tr>
+        <tr>
+          <td>404</td>
+          <td>Not Found</td>
+          <td>(page 파라미터 + 1) × 10 − 10 + 1개만큼의 단어가 존재하지 않는 경우</td>
+          <!--(page 파라미터가 0일 경우 page × 10 + 1의 결과가 음수이므로 같은 결과를 낼 수 있도록 수식 변경-->
+        </tr>
+        <tr>
+          <td>500</td>
+          <td>Internal Server Error</td>
+          <td>서버 처리 오류</td>
+          <td/>
+        </tr>
+      </table>
+    </details>
+  </li>
+  <!--쇼핑 도메인 추가 필요-->
 </ul>
 </p>
 <p id="execute">
