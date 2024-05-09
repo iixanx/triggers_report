@@ -2,6 +2,9 @@
 
 (주)트리거스 입사 과제 진행을 위해 제작한 레포지토리입니다.
 
+소스 코드 중 루트 경로의 <code>triggers.erd.drawio</code>에서 ERD를 확인할 수 있습니다. <br/>
+<code>test</code> 폴더에서 e2e 테스트 코드를 확인하실 수 있으며, 각 도메인 별 단위 테스트 코드는 도메인 별로 나뉜 폴더 내에서 확인 가능합니다.
+
 <p style="border:1px;color:#b3b3b3;">
 <h1>목차 Contents table</h1>
 
@@ -28,7 +31,11 @@
 <p id="intent">
 <h1>설계 의도</h1>
 
-- 설계 의도 나냐ㅓㄴ이러비ㅣ어ㅐㅓ배ㅣㄷㄹ
+<p>
+  기술 문서에 적힌 기획에 더해 확장성 있고 단단한 구조를 지향하여 구성하였습니다. <br/>
+  OOP와 AOP를 함께 도입하였으며, DI / IoC를 적극적으로 활용하였습니다. <br/> 
+  이를 통해 코드의 확장 및 변경, 테스팅 등에서 효율성을 추구하였습니다.
+</p>
 
 </p>
 <p id="feature">
@@ -359,7 +366,8 @@
                 <th>제약 조건</th>
               </tr>
               <tr>
-                <td></td>
+                <td/>
+                <td/>
               </tr>
             </table>
           </td>
@@ -374,6 +382,12 @@
           <td>401</td>
           <td>Unauthorized</td>
           <td>Header의 authorization이 유효하지 않은 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>500</td>
+          <td>Internal Server Error</td>
+          <td>서버 처리 오류</td>
           <td/>
         </tr>
       </table>
@@ -476,6 +490,12 @@
           <td>페이지에 해당하는 단어가 없을 경우</td>
           <td/>
         </tr>
+        <tr>
+          <td>500</td>
+          <td>Internal Server Error</td>
+          <td>서버 처리 오류</td>
+          <td/>
+        </tr>
       </table>
     </details>
   </li>
@@ -552,6 +572,12 @@
           <td>401</td>
           <td>Unauthorization</td>
           <td>authorization이 유효하지 않은 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>500</td>
+          <td>Internal Server Error</td>
+          <td>서버 처리 오류</td>
           <td/>
         </tr>
       </table>
@@ -653,6 +679,12 @@
           <td>자신의 단어장에 등록되지 않은 단어 아이디</td>
           <td/>
           <!--403 에러와 404 에러를 통합하였음-->
+        </tr>
+        <tr>
+          <td>500</td>
+          <td>Internal Server Error</td>
+          <td>서버 처리 오류</td>
+          <td/>
         </tr>
       </table>
     </details>
@@ -778,6 +810,12 @@
           <td/>
         </tr>
         <!--트랜잭션 아이솔레이션 레벨 : Read Committed, 진행 중 409-->
+        <tr>
+          <td>500</td>
+          <td>Internal Server Error</td>
+          <td>서버 처리 오류</td>
+          <td/>
+        </tr>
       </table>
     </details>
   </li>
@@ -822,6 +860,10 @@
                 <th>키</th>
                 <th>제약 조건</th>
               </tr>
+              <tr>
+                <td/>
+                <td/>
+              </tr>
             </table>
           </td>
         </tr>
@@ -843,6 +885,12 @@
           <td>단어장에 해당 아이디의 단어가 없음</td>
           <td/>
         </tr>
+        <tr>
+          <td>500</td>
+          <td>Internal Server Error</td>
+          <td>서버 처리 오류</td>
+          <td/>
+        </tr>
       </table>
     </details>
   </li>
@@ -858,36 +906,694 @@
 3-2. (개인적 추가) 퀴즈를 틀릴 경우 해당 문제는 오답 처리되며, "오답 노트"에 추가됩니다.
 <ul>
   <li>
-  asdf
-    <ul>
-      <li></li>
-      <li></li>
-      <li></li>
-    </ul>
+    <details>
+      <summary>
+        <h3>GET /rand</h3>
+        랜덤으로 퀴즈를 조회합니다. <br/>
+        단어는 사용자의 단어장에서 출제됩니다.
+      </summary>
+      <h4>Request</h4>
+      <table>
+        <tr>
+          <th>위치</th>
+          <th>키</th>
+          <th>제약조건</th>
+        </tr>
+        <tr>
+          <td>Header</td>
+          <td>authorization</td>
+          <td>
+            <li>Type: String</li>
+            <li>Not Null</li>
+            <li>Access Token을 입력</li>
+            <li>Bearer Token</li>
+          </td>
+        </tr>
+      </table>
+      <h4>Response</h4>
+      <table>
+        <tr>
+          <th>응답 코드</th>
+          <th>코드명</th>
+          <th>발생하는 경우</th>
+          <th>응답값</th>
+        </tr>
+        <tr>
+          <td>200</td>
+          <td>OK</td>
+          <td>조회에 성공한 경우</td>
+          <td>
+            <table>
+              <tr>
+                <th>키</th>
+                <th>제약 조건</th>
+              </tr>
+              <tr>
+                <td>word_id</td>
+                <td>
+                  <li>Type: Number</li>
+                  <li>Not Null</li>
+                  <li>0 <= word_id인 자연수</li>
+                </td>
+              </tr>
+              <tr>
+                <td>word</td>
+                <td>
+                  <li>Type: String</li>
+                  <li>Not Null</li>
+                  <li>A-Za-z의 정규식을 따르는 문자열</li>
+                </td>
+              </tr>
+              <tr>
+                <td>means</td>
+                <td>
+                  <li>Type: Array < Object ></li>
+                  <li>Not Null</li>
+                  <li>Length : 4 (고정값)</li>
+                  <table>
+                    <tr>
+                      <th>키</th>
+                      <th>제약 조건</th>
+                    </tr>
+                    <tr>
+                      <td>mean_id</td>
+                      <td>
+                        <li>Type: Number</li>
+                        <li>Not Null</li>
+                        <li>0 <= mean_id인 자연수</li>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>mean</td>
+                      <td>
+                        <li>Type: String</li>
+                        <li>Not Null</li>
+                        <li>단어의 뜻</li>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>401</td>
+          <td>Unauthorized</td>
+          <td>authorization의 값이 유효하지 않을 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>500</td>
+          <td>Internal Server Error</td>
+          <td>서버 처리 오류</td>
+          <td/>
+        </tr>
+      </table>
+    </details>
   </li>
   <li>
-  asdf
-    <ul>
-      <li></li>
-      <li></li>
-      <li></li>
-    </ul>
-  </li>
-  <li>
-  asdf
-    <ul>
-      <li></li>
-      <li></li>
-      <li></li>
-    </ul>
+    <details>
+      <summary>
+        <h3>POST /rand</h3>
+        단어 문제를 풀이합니다. <br/>
+      </summary>
+      <h4>Request</h4>
+      <table>
+        <tr>
+          <th>위치</th>
+          <th>키</th>
+          <th>제약조건</th>
+        </tr>
+        <tr>
+          <td>Header</td>
+          <td>authorization</td>
+          <td>
+            <li>Type: String</li>
+            <li>Not Null</li>
+            <li>Access Token을 입력</li>
+            <li>Bearer Token</li>
+          </td>
+        </tr>
+        <tr>
+          <td>Query</td>
+          <td>word_id</td>
+          <td>
+            <li>Type: Number</li>
+            <li>Not Null</li>
+            <li>0 <= word_id인 자연수</li>
+          </td>
+        </tr>
+        <tr>
+          <td>Body</td>
+          <td>mean_id</td>
+          <td>
+            <li>Type: Number</li>
+            <li>Not Null</li>
+            <li>0 <= select인 자연수</li>
+          </td>
+        </tr>
+      </table>
+      <h4>Response</h4>
+      <table>
+        <tr>
+          <th>응답 코드</th>
+          <th>코드명</th>
+          <th>발생하는 경우</th>
+          <th>응답값</th>
+        </tr>
+        <tr>
+          <td>200</td>
+          <td>OK</td>
+          <td>요청이 성공적으로 전송된 경우</td>
+          <td>
+            <table>
+              <tr>
+                <th>키</th>
+                <th>제약조건</th>
+              </tr>
+              <tr>
+                <td>is_correct</td>
+                <td>
+                  <li>Type: Boolean</li>
+                  <li>Not Null</li>
+                </td>
+              </tr>
+              <tr>
+                <td>word</td>
+                <td>
+                  <li>Type: String</li>
+                  <li>Not Null</li>
+                </td>
+              </tr>
+              <tr>
+                <td>mean</td>
+                <td>
+                  <li>Type: String</li>
+                  <li>Not Null</li>
+                </td>
+              </tr>
+              <tr>  
+                <td>earned_coins</td>
+                <td>
+                  <li>Type: Number</li>
+                  <li>Nullable (if is_correct: false then null)</li>
+                  <li>Min: 2, Max: 13</li>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>400</td>
+          <td>Bad Request</td>
+          <td>word_id 파라미터가 Numeric하지 않거나 body의 mean_id가 Number가 아닌 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>401</td>
+          <td>Unauthorized</td>
+          <td>authorization의 값이 유효하지 않은 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>404</td>
+          <td>Not Found</td>
+          <td>단어 아이디가 단어장에 등록되지 않은 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>500</td>
+          <td>Internal Server Error</td>
+          <td>서버 처리 오류</td>
+          <td/>
+        </tr>
+      </table>
+    </details>
   </li>
 </ul>
 <h2 id="wrong">(개인적 추가) 오답 노트 도메인 ("/wrong")</h2>
-4. 오답 노트는 사용자가 퀴즈에서 틀린 단어들을 모아둔 도메인입니다. 해당 도메인에서 (틀린 횟수) × 2회만큼 퀴즈를 맞추면 해당 단어는 오답 노트에서 제외됩니다.
+4. 오답 노트는 사용자가 퀴즈에서 틀린 단어들을 모아둔 도메인입니다.<br/>
+해당 도메인에서 (틀린 횟수) × 2회만큼 퀴즈를 맞추면 해당 단어는 오답 노트에서 제외됩니다.<br/>
+추가로, 오답 노트 도메인에서 맞춘 퀴즈의 경우 1 ~ 7코인을 무작위로 얻을 수 있습니다.
 <ul>
-  <li></li>
-  <li></li>
-  <li></li>
+  <li>
+    <details>
+      <summary>
+        <h3>GET /rand</h3>
+        틀린 단어 중 무작위로 퀴즈를 조회합니다. <br/>
+        4개의 보기가 제공됩니다.
+      </summary>
+      <h4>Request</h4>
+      <table>
+        <tr>
+          <th>위치</th>
+          <th>키</th>
+          <th>제약조건</th>
+        </tr>
+        <tr>
+          <td>Header</td>
+          <td>authorization</td>
+          <td>
+            <li>Type: String</li>
+            <li>Not Null</li>
+            <li>Access Token을 입력</li>
+            <li>Bearer Token</li>
+          </td>
+        </tr>
+      </table>
+      <h4>Response</h4>
+      <table>
+        <tr>
+          <th>응답 코드</th>
+          <th>코드명</th>
+          <th>발생하는 경우</th>
+          <th>응답값</th>
+        </tr>
+        <tr>
+          <td>200</td>
+          <td>OK</td>
+          <td>올바른 요청으로 조회에 성공한 경우</td>
+          <td>
+            <table>
+              <tr>  
+                <th>키</th>
+                <th>제약 조건</th>
+              </tr>
+              <tr>
+                <td>word_id</td>
+                <td>
+                  <li>Type: Number</li>
+                  <li>Not Null</li>
+                  <li>0 <= word_id인 자연수</li>
+                </td>
+              </tr>
+              <tr>
+                <td>word</td>
+                <td>
+                  <li>Type: String</li>
+                  <li>Not Null</li>
+                </td>
+              </tr>
+              <tr>
+                <td>means</td>
+                <td>
+                  <li>Type: Array < Object ></li>
+                  <table>
+                    <tr>
+                      <th>키</th>
+                      <th>제약조건</th>
+                    </tr>
+                    <tr>
+                      <td>mean_id</td>
+                      <td>
+                        <li>Type: Number</li>
+                        <li>Not Null</li>
+                        <li>0 <= mean_id인 자연수</li>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>mean</td>
+                      <td>
+                        <li>Type: String</li>
+                        <li>Not Null</li>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td>earned_coins</td>
+                <td>
+                  <li>Type: Number</li>
+                  <li>Not Null</li>
+                  <li>Min : 1, Max : 7</li>
+                </td>
+              </tr>
+              <tr>
+                <td>is_correct</td>
+                <td>
+                  <li>Type: Boolean</li>
+                  <li>Not Null</li>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>401</td>
+          <td>Unauthorized</td>
+          <td>authorization의 값이 유효하지 않은 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>500</td>
+          <td>Internal Server Error</td>
+          <td>서버 처리 오류</td>
+          <td/>
+        </tr>
+      </table>
+    </details>
+  </li>
+  <li>
+    <details>
+      <summary>
+        <h3>GET /list</h3>
+        오답노트에 있는 단어들을 모아볼 수 있습니다. <br/>
+        페이지 당 단어는 10개씩 제공됩니다.
+      </summary>
+      <h4>Request</h4>
+      <table>
+        <tr>
+          <th>위치</th>
+          <th>키</th>
+          <th>제약조건</th>
+        </tr>
+        <tr>
+          <td>Header</td>
+          <td>authorization</td>
+          <td>
+            <li>Type: String</li>
+            <li>Not Null</li>
+            <li>Access Token을 입력</li>
+            <li>Bearer Token</li>
+          </td>
+        </tr>
+        <tr>
+          <td>Query</td>
+          <td>page</td>
+          <td>
+            <li>Type: Number</li>
+            <li>Nullable (Default: 0)</li>
+            <li>0 <= page인 자연수</li>
+          </td>
+        </tr>
+      </table>
+      <h4>Response</h4>
+      <table>
+        <tr>
+          <th>응답 코드</th>
+          <th>코드명</th>
+          <th>발생하는 경우</th>
+          <th>응답값</th>
+        </tr>
+        <tr>
+          <td>200</td>
+          <td>OK</td>
+          <td>조회에 성공한 경우</td>
+          <td>
+            <table>
+              <tr>
+                <th>키</th>
+                <th>제약조건</th>
+              </tr>
+              <tr>
+                <td>words</td>
+                <td>
+                  <li>Type: Array < Object > </li>
+                  <li>Max Length : 10</li>
+                  <table>
+                    <tr>
+                      <th>키</th>
+                      <th>제약조건</th>
+                    </tr>
+                    <tr>
+                      <td>word_id</td>
+                      <td>
+                        <li>Type: Number</li>
+                        <li>Not Null</li>
+                        <li>0 <= word_id인 자연수</li>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>word</td>
+                      <td>
+                        <li>Type: String</li>
+                        <li>Not Null</li>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>mean</td>
+                      <td>
+                        <li>Type: String</li>
+                        <li>Not Null</li>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>400</td>
+          <td>Bad Request</td>
+          <td>page의 값이 Numeric하지 않은 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>401</td>
+          <td>Unauthorized</td>
+          <td>authorization의 값이 올바르지 않을 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>404<td>
+          <td>Not Found</td>
+          <td>(page 파라미터 + 1) × 10 − 10 + 1개만큼의 단어가 존재하지 않는 경우</td>
+          <!--(page 파라미터가 0일 경우 page × 10 + 1의 결과가 음수이므로 같은 결과를 낼 수 있도록 수식 변경-->
+          <td/>
+        </tr>
+        <tr>
+          <td>500</td>
+          <td>Internal Server Error</td>
+          <td>서버 처리 오류</td>
+          <td/>
+        </tr>
+      </table>
+    </details>
+  </li>
+  <li>
+    <details>
+      <summary>
+        <h3>GET /:word_id</h3>
+        오답노트에 있는 단어를 조회합니다.
+      </summary>
+      <h4>Request</h4>
+      <table>
+        <tr>
+          <th>위치</th>
+          <th>키</th>
+          <th>제약조건</th>
+        </tr>
+        <tr>
+          <td>Header</td>
+          <td>authorization</td>
+          <td>
+            <li>Type: String</li>
+            <li>Not Null</li>
+            <li>Access Token을 입력</li>
+            <li>Bearer Token</li>
+          </td>
+        </tr>
+        <tr>
+          <td>Param</td>
+          <td>word_id</td>
+          <td>
+            <li>Type: Number</li>
+            <li>Not Null</li>
+          </td>
+        </tr>
+      </table>
+      <h4>Response</h4>
+      <table>
+        <tr>
+          <th>응답 코드</th>
+          <th>코드명</th>
+          <th>발생하는 경우</th>
+          <th>응답값</th>
+        </tr>
+        <tr>
+          <td>200</td>
+          <td>OK</td>
+          <td>조회에 성공하는 경우</td>
+          <td>
+            <table>
+              <tr>
+                <th>키</th>
+                <th>제약조건</th>
+              </tr>
+              <tr>
+                <td>word_id</td>
+                <td>
+                  <li>Type: Number</li>
+                  <li>Not Null</li>
+                  <li>0 <= word_id인 자연수</li>
+                </td>
+              </tr>
+              <tr>
+                <td>word</td>
+                <td>
+                  <li>Type: String</li>
+                  <li>Not Null</li>
+                </td>
+              </tr>
+              <tr>
+                <td>mean</td>
+                <td>
+                  <li>Type: String</li>
+                  <li>Not Null</li>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>400</td>
+          <td>Bad Request</td>
+          <td>word_id의 타입이 Number가 아닌 경우 또는 음수인 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>401</td>
+          <td>Unauthorized</td>
+          <td>authorization의 값이 유효하지 않은 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>404</td>
+          <td>Not Found</td>
+          <td>오답 노트에 등록되지 않은 단어의 아이디</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>500</td>
+          <td>Internal Server Error</td>
+          <td>서버 처리 오류</td>
+          <td/>
+        </tr>
+      </table>
+    </details>
+  </li>
+  <li>
+    <details>
+      <summary>
+        <h3>POST /rand</h3>
+        랜덤으로 조회한 오답노트 내의 문제를 풀이합니다. <br/>
+        정답을 (해당 단어 문제를 틀린 횟수) × 2회만큼 맞출 경우 해당 단어는 오답 노트에서 제외됩니다.
+      </summary>
+      <h4>Request</h4>
+      <table>
+        <tr>
+          <th>위치</th>
+          <th>키</th>
+          <th>제약조건</th>
+        </tr>
+        <tr>
+          <td>Header</td>
+          <td>authorization</td>
+          <td>
+            <li>Type: String</li>
+            <li>Not Null</li>
+            <li>Access Token을 입력</li>
+            <li>Bearer Token</li>
+          </td>
+        </tr>
+        <tr>
+          <td>Param</td>
+          <td>word_id</td>
+          <td>
+            <li>Type: Number</li>
+            <li>Not Null</li>
+            <li>0 <= word_id인 자연수</li>
+          </td>
+        </tr>
+        <tr>
+          <td>Body</td>
+          <td>mean_id</td>
+          <td>
+            <li>Type: Number</li>
+            <li>Not Null</li>
+            <li>0 <= mean_id인 자연수</li>
+          </td>
+        </tr>
+      </table>
+      <h4>Response</h4>
+      <table>
+        <tr>
+          <th>응답 코드</th>
+          <th>코드명</th>
+          <th>발생하는 경우</th>
+          <th>응답값</th>
+        </tr>
+        <tr>
+          <td>200</td>
+          <td>OK</td>
+          <td>요청에 성공한 경우</td>
+          <td>
+            <table>
+              <tr>
+                <th>키</th>
+                <th>제약조건</th>
+              </tr>
+              <tr>
+                <td>is_correct</td>
+                <td>
+                  <li>Type: Boolean</li>
+                  <li>Not Null</li>
+                </td>
+              </tr>
+              <tr>
+                <td>word</td>
+                <td>
+                  <li>Type: String</li>
+                  <li>Not Null</li>
+                </td>
+              </tr>
+              <tr>
+                <td>mean</td>
+                <td>
+                  <li>Type: String</li>
+                  <li>Not Null</li>
+                </td>
+              </tr>
+              <tr>  
+                <td>earned_coins</td>
+                <td>
+                  <li>Type: Number</li>
+                  <li>Nullable (if is_correct: false then null)</li>
+                  <li>Min: 1, Max: 7</li>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>400</td>
+          <td>Bad Request</td>
+          <td>word_id의 타입이 Number가 아닌 경우 또는 음수인 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>401</td>
+          <td>Unauthorized</td>
+          <td>authorization의 값이 유효하지 않은 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>404</td>
+          <td>Not Found</td>
+          <td>오답노트에 등록되지 않은 단어의 아이디</td>
+        </tr>
+        <tr>
+          <td>500</td>
+          <td>Internal Server Error</td>
+          <td>서버 처리 오류</td>
+          <td/>
+        </tr>
+      </table>
+    </details>
+  </li>
 </ul>
 <h2 id="admin">관리자 도메인 ("/admin")</h2>
 관리자는 관리자 페이지에 로그인 할 수 있습니다.
@@ -900,7 +1606,29 @@
 </ul>
 </p>
 <p id="execute">
-<h1>실행 방법</h1>
+  <h1>실행 방법</h1>
+    <h2>실행 환경</h2>
+    <ul>
+      <li>Node Version >= 18.19.0 </li>
+      <li>npm version >= 10.2.4 </li>
+      <li>pnpm version >= 8.15.1 </li>
+    </ul>
+    <h2>실행 명령어</h2>
+
+```bash
+pnpm start:dev # Develop mode 실행
+
+pnpm start:prod # Production mode 실행
+
+pnpm test:unit # Unit Test 실행
+
+pnpm test:e2e # Integrated Test 실행
+
+pnpm build # 빌드
+
+pnpm start:node # 빌드한 파일 실행
+```
+
 </p>
 <p id="trouble">
 <h1>트러블 슈팅</h1>
@@ -908,8 +1636,6 @@
 <p id="4">
 <h1>회고</h1>
 </p>
-
-
 
 <!--
     <details>
