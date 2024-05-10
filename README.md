@@ -62,12 +62,12 @@
         </tr>
         <tr>
           <td>Body</td>
-          <td>user_id</td>
+          <td>email</td>
           <td>
             <li>Type: String </li>
             <li>Unique Value</li>
             <li>Not Null</li>
-            <li>Length: 5 ~ 25</li>
+            <li>Length: 5 ~ 50</li>
           </td>
         </tr>
         <tr>

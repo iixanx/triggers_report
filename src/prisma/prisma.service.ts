@@ -42,4 +42,30 @@ export class PrismaService
       },
     });
   }
+
+  async findUserByEmail(email: string) {
+    return await this.user.findUnique({
+      where: { email },
+      select: {
+        user_id: true,
+        name: true,
+        email: true,
+        is_admin: true,
+        coin: true,
+      },
+    });
+  }
+
+  async createUser(name, email, password, isAdmin) {
+    await this.user.create({
+      data: {
+        name,
+        email,
+        password,
+        is_admin: isAdmin,
+      },
+    });
+
+    return await this.findUserByEmail(email);
+  }
 }
