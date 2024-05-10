@@ -2039,6 +2039,8 @@ pnpm i # dependency install
 ```
 
 ```bash
+pnpm build # 빌드
+
 pnpm start:dev # Develop mode 실행
 
 pnpm start:prod # Production mode 실행
@@ -2047,9 +2049,7 @@ pnpm test:unit # Unit Test 실행
 
 pnpm test:e2e # Integrated Test 실행
 
-pnpm build # 빌드
-
-pnpm start:node # 빌드한 파일 실행
+pnpm test:cov # coverage 확인
 ```
 
 </p>
