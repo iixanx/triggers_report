@@ -7,6 +7,8 @@ import { SignInRequestDto } from './dto/request/signin.request.dto';
 import { UnsubRequestDto } from './dto/request/unsub.request.dto';
 import { SignInResponseDto } from './dto/response/siginin.response.dto';
 import { UnsubResponseDto } from './dto/response/unsub.response.dto';
+import { RefreshRequestDto } from './dto/request/refresh.request.dto';
+import { RefreshResponseDto } from './dto/response/refresh.response.dto';
 
 @Controller('auth')
 export class AuthController implements IAuthController {
@@ -20,16 +22,25 @@ export class AuthController implements IAuthController {
 
   @Post('signup')
   async signup(@Body() request: SignUpRequestDto): Promise<SignUpResponseDto> {
+    this.logger.log("/signup")
     const data = await this.service.signup(request);
 
-    return data
+    return data;
   }
 
-  signin(request: SignInRequestDto): Promise<SignInResponseDto> {
-    throw new Error('Method not implemented.');
+  @Post('signin')
+  async signin(@Body() request: SignInRequestDto): Promise<SignInResponseDto> {
+    this.logger.log("/signin")
+    const data = await this.service.signin(request);
+
+    return data;
   }
 
   unsub(request: UnsubRequestDto): Promise<UnsubResponseDto> {
+    throw new Error('Method not implemented.');
+  }
+
+  refresh(request: RefreshRequestDto): Promise<RefreshResponseDto> {
     throw new Error('Method not implemented.');
   }
 }

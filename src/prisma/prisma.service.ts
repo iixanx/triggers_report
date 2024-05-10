@@ -37,6 +37,7 @@ export class PrismaService
         user_id: true,
         name: true,
         email: true,
+        password: true,
         is_admin: true,
         coin: true,
       },
