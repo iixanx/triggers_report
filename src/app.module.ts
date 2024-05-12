@@ -9,12 +9,6 @@ import { WinstonInstance } from './util/winstonLgger.util';
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
-      envFilePath:
-        process.env.NODE_ENV == 'prod'
-          ? '.env'
-          : process.env.NODE_ENV == 'dev'
-          ? '.env.dev'
-          : '.env.local',
     }),
     WinstonModule.forRoot({
       instance: WinstonInstance,

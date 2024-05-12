@@ -57,7 +57,12 @@ export class PrismaService
     });
   }
 
-  async createUser(name, email, password, isAdmin) {
+  async createUser(
+    name: string,
+    email: string,
+    password: string,
+    isAdmin: boolean,
+  ) {
     await this.user.create({
       data: {
         name,
@@ -68,5 +73,13 @@ export class PrismaService
     });
 
     return await this.findUserByEmail(email);
+  }
+
+  async deleteUserById(id: number) {
+    await this.user.delete({
+      where: {
+        user_id: id,
+      },
+    });
   }
 }

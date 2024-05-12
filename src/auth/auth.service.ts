@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Inject,
   Injectable,
   InternalServerErrorException,
@@ -16,9 +17,10 @@ import { SignInResponseDto } from './dto/response/siginin.response.dto';
 import { SignInRequestDto } from './dto/request/signin.request.dto';
 import { UnsubRequestDto } from './dto/request/unsub.request.dto';
 import { UnsubResponseDto } from './dto/response/unsub.response.dto';
-import { AuthUtil } from './util/auth.util';
 import { RefreshRequestDto } from './dto/request/refresh.request.dto';
 import { RefreshResponseDto } from './dto/response/refresh.response.dto';
+import { TokenRequestDto } from 'src/dto/request/token.request.dto';
+import { AuthUtil } from './util/auth.util';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -79,8 +81,28 @@ export class AuthService implements IAuthService {
   };
 
   unsub = async (request: UnsubRequestDto): Promise<UnsubResponseDto> => {
+    const { password, user } = request;
+
+    const thisUser = await this.prisma.findUserById(user.user_id);
+    if (!thisUser) throw new NotFoundException('존재하지 않는 계정');
+
+    if (!(await compare(password, thisUser.password)))
+      throw new ForbiddenException('비밀번호가 일치하지 않음');
+
+    try {
+      await this.prisma.deleteUserById(user.user_id);
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException('데이터베이스 트랜잭션 오류');
+    }
+
     return;
   };
 
-  refresh: (request: RefreshRequestDto) => Promise<RefreshResponseDto>;
+  refresh = async (
+    header: TokenRequestDto,
+    request: RefreshRequestDto,
+  ): Promise<RefreshResponseDto> => {
+    return;
+  };
 }

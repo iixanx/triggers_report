@@ -37,6 +37,12 @@
   이를 통해 코드의 확장 및 변경, 테스팅 등에서 효율성을 추구하였습니다.
 </p>
 
+<p>
+  winston logger를 사용하여 편리하고 확장성 있는 로깅 시스템을 구축하였습니다.
+  swagger docs를 활용하여 가독성 좋은 API 문서를 작성하였습니다.
+  Repository Pattern을 활용하여 SQL 처리 로직을 분리하였습니다.
+</p>
+
 </p>
 <p id="feature">
 <h1>기능 설명</h1>
@@ -279,13 +285,13 @@
         <tr>
           <td>401</td>
           <td>Unauthorized</td>
-          <td>Header의 authorized를 입력받지 못한 경우</td>
+          <td>Header의 authorization을 입력받지 못한 경우</td>
           <td/>
         </tr>
         <tr>
           <td>403</td>
           <td>Forbidden</td>
-          <td>JWT 토큰 계정이 일치하지 않는 경우</td>
+          <td>JWT 토큰 계정과 비밀번호가 일치하지 않는 경우</td>
           <td/>
         </tr>
         <tr>
