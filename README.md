@@ -462,8 +462,11 @@
                 <th>제약 조건</th>
               </tr>
               <tr>
-                <td/>
-                <td/>
+                <td>word_id</td>
+                <td>
+                  <li>Type: Number</li>
+                  <li>Not Null</li>
+                </td>
               </tr>
             </table>
           </td>
