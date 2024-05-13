@@ -91,18 +91,18 @@ export class PrismaService
       },
     });
 
-    if(!word) throw new NotFoundException("존재하지 않는 아이디의 단어")
+    if (!word) throw new NotFoundException('존재하지 않는 아이디의 단어');
 
     const mean = await this.mean.findUnique({
       where: {
         word_id: word.word_id,
-      }
-    })
+      },
+    });
 
     return {
       word,
-      mean
-    }
+      mean,
+    };
   }
 
   async findWordList(userId: number, page: number) {
@@ -167,5 +167,26 @@ export class PrismaService
       },
     );
     return newWord;
+  }
+
+  async updateWord(wordId: number, word: string, mean: string) {
+    await this.$transaction([
+      this.word.update({
+        where: {
+          word_id: wordId,
+        },
+        data: {
+          word,
+        },
+      }),
+      this.mean.update({
+        where: {
+          word_id: wordId,
+        },
+        data: {
+          mean,
+        },
+      }),
+    ]);
   }
 }

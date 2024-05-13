@@ -5,6 +5,7 @@ import {
   Inject,
   Logger,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -18,7 +19,7 @@ import {
 import { GetRandomRequestDto } from './dto/request/getRandom.request.dto';
 import { GetWordRequestDto } from './dto/request/getWord.request.dto';
 import { NewWordRequestDto } from './dto/request/newWord.request.dto';
-import { UpdateWordRequestDto } from './dto/request/updateWord.request.dto';
+import { UpdateWordParamRequestDto, UpdateWordRequestDto } from './dto/request/updateWord.request.dto';
 import { DeleteWordResponseDto } from './dto/response/deleteWord.response.dto';
 import { GetListResponseDto } from './dto/response/getList.response.dto';
 import { GetRandomResponseDto } from './dto/response/getRandom.response.dto';
@@ -74,17 +75,23 @@ export class WordController implements IWordController {
   async getWord(
     @Param() request: GetWordRequestDto,
   ): Promise<GetWordResponseDto> {
-    this.logger.log('/:word_id');
+    this.logger.log('GET /:word_id');
     const data = await this.service.getWord(request);
 
     return data;
   }
 
+  @Patch(':word_id')
   async updateWord(
-    request: UpdateWordRequestDto,
+    @Param() param: UpdateWordParamRequestDto,
+    @Body() request: UpdateWordRequestDto,
   ): Promise<UpdateWordResponseDto> {
-    throw new Error('Method not implemented.');
+    this.logger.log('PATCH /:word_id');
+    const data = await this.service.updateWord(param, request);
+
+    return data;
   }
+
   async deleteWord(
     request: DeleteWordRequestDto,
   ): Promise<DeleteWordResponseDto> {

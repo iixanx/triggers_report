@@ -3,7 +3,7 @@ import { GetListQueryRequestDto, GetListRequestDto } from "../dto/request/getLis
 import { GetRandomRequestDto } from "../dto/request/getRandom.request.dto";
 import { GetWordRequestDto } from "../dto/request/getWord.request.dto";
 import { NewWordRequestDto } from "../dto/request/newWord.request.dto";
-import { UpdateWordRequestDto } from "../dto/request/updateWord.request.dto";
+import { UpdateWordParamRequestDto, UpdateWordRequestDto } from "../dto/request/updateWord.request.dto";
 import { DeleteWordResponseDto } from "../dto/response/deleteWord.response.dto";
 import { GetListResponseDto } from "../dto/response/getList.response.dto";
 import { GetRandomResponseDto } from "../dto/response/getRandom.response.dto";
@@ -16,6 +16,6 @@ export interface IWordController {
   getList(query: GetListQueryRequestDto, request: GetListRequestDto): Promise<GetListResponseDto>;
   getRand(request: GetRandomRequestDto): Promise<GetRandomResponseDto>;
   getWord(request: GetWordRequestDto): Promise<GetWordResponseDto>;
-  updateWord(request: UpdateWordRequestDto): Promise<UpdateWordResponseDto>;
+  updateWord(param: UpdateWordParamRequestDto, request: UpdateWordRequestDto): Promise<UpdateWordResponseDto>;
   deleteWord(request: DeleteWordRequestDto): Promise<DeleteWordResponseDto>;
 }

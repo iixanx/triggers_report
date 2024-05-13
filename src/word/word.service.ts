@@ -16,7 +16,10 @@ import {
 import { GetRandomRequestDto } from './dto/request/getRandom.request.dto';
 import { GetWordRequestDto } from './dto/request/getWord.request.dto';
 import { NewWordRequestDto } from './dto/request/newWord.request.dto';
-import { UpdateWordRequestDto } from './dto/request/updateWord.request.dto';
+import {
+  UpdateWordParamRequestDto,
+  UpdateWordRequestDto,
+} from './dto/request/updateWord.request.dto';
 import { DeleteWordResponseDto } from './dto/response/deleteWord.response.dto';
 import { GetListResponseDto } from './dto/response/getList.response.dto';
 import { GetRandomResponseDto } from './dto/response/getRandom.response.dto';
@@ -107,10 +110,28 @@ export class WordService implements IWordService {
   };
 
   updateWord = async (
+    query: UpdateWordParamRequestDto,
     request: UpdateWordRequestDto,
   ): Promise<UpdateWordResponseDto> => {
-    return;
+    const { wordId } = query;
+    const { user } = request;
+
+    const thisWord = await this.prisma.findWordById(Number(wordId));
+    if (!thisWord || user.user_id !== thisWord.word.user_id)
+      throw new NotFoundException('존재하지 않는 아이디의 단어');
+
+    const word = request.word ?? thisWord.word.word;
+    const mean = request.mean ?? thisWord.mean.mean;
+
+    await this.prisma.updateWord(thisWord.word.word_id, word, mean);
+
+    return {
+      word_id: thisWord.word.word_id,
+      word,
+      mean,
+    };
   };
+
   deleteWord = async (
     request: DeleteWordRequestDto,
   ): Promise<DeleteWordResponseDto> => {

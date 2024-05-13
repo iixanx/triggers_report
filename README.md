@@ -841,7 +841,7 @@
           <td>word</td>
           <td>
             <li>Type: String</li>
-            <li>Nullable</li>
+            <li>Nullable (json 상에서 누락 가능 / null 금지)</li>
             <li>A-Za-z의 정규식을 따르는 문자열</li>
           </td>
         </tr>
@@ -850,7 +850,7 @@
           <td>mean</td>
           <td>
             <li>Type: String</li>
-            <li>Nullable</li>
+            <li>Nullable (json 상에서 누락 가능 / null 금지)</li>
           </td>
         </tr>
       </table>
@@ -918,13 +918,6 @@
           <td/>
         </tr>
         <!--403과 404 통합-->
-        <tr>
-          <td>409</td>
-          <td>Conflict</td>
-          <td>해당 단어에 트랜잭션이 진행 중</td>
-          <td/>
-        </tr>
-        <!--트랜잭션 아이솔레이션 레벨 : Read Committed, 진행 중 409-->
         <tr>
           <td>500</td>
           <td>Internal Server Error</td>
