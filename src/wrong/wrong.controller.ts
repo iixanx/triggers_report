@@ -4,6 +4,7 @@ import {
   Get,
   Inject,
   Logger,
+  Param,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -14,7 +15,10 @@ import {
   GetListRequestDto,
 } from './dto/request/getList.request.dto';
 import { GetRandomRequestDto } from './dto/request/getRandom.request.dto';
-import { GetWordRequestDto } from './dto/request/getWord.request.dto';
+import {
+  GetWordParamRequestDto,
+  GetWordRequestDto,
+} from './dto/request/getWord.request.dto';
 import { PostRandomRequestDto } from './dto/request/postRandom.request.dto';
 import { GetListResponseDto } from './dto/response/getList.response.dto';
 import { GetRandomResponseDto } from './dto/response/getRandom.response.dto';
@@ -54,8 +58,15 @@ export class WrongController implements IWrongController {
     return data;
   }
 
-  async getWord(request: GetWordRequestDto): Promise<GetWordResponseDto> {
-    throw new Error('Method not implemented.');
+  @Get(':word_id')
+  async getWord(
+    @Param() param: GetWordParamRequestDto,
+    @Body() request: GetWordRequestDto,
+  ): Promise<GetWordResponseDto> {
+    this.logger.log('GET /wrong/:word_id');
+    const data = await this.service.getWord(param, request);
+
+    return data;
   }
 
   async postRand(

@@ -6,7 +6,10 @@ import {
   GetListRequestDto,
 } from './dto/request/getList.request.dto';
 import { GetRandomRequestDto } from './dto/request/getRandom.request.dto';
-import { GetWordRequestDto } from './dto/request/getWord.request.dto';
+import {
+  GetWordParamRequestDto,
+  GetWordRequestDto,
+} from './dto/request/getWord.request.dto';
 import { PostRandomRequestDto } from './dto/request/postRandom.request.dto';
 import { GetRandomResponseDto } from './dto/response/getRandom.response.dto';
 import { GetWordResponseDto } from './dto/response/getWord.response.dto';
@@ -61,8 +64,18 @@ export class WrongService implements IWrongService {
     return { words: list };
   };
 
-  getWord = async (request: GetWordRequestDto): Promise<GetWordResponseDto> => {
-    return;
+  getWord = async (
+    param: GetWordParamRequestDto,
+    request: GetWordRequestDto,
+  ): Promise<GetWordResponseDto> => {
+    const { wordId } = param;
+    const { user } = request;
+
+    const thisWord = await this.prisma.findWrongById(user.user_id, wordId);
+    if (!thisWord)
+      throw new NotFoundException('오답노트에 존재하지 않는 아이디의 단어');
+
+    return thisWord;
   };
 
   postRand = async (

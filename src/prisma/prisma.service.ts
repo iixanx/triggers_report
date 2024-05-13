@@ -299,6 +299,39 @@ export class PrismaService
     });
   }
 
+  async findWrongById(userId: number, wordId: number) {
+    const wrong = await this.wrong.findUnique({
+      where: {
+        user_id_word_id: {
+          user_id: userId,
+          word_id: wordId,
+        },
+      },
+      select: {
+        word_id: true,
+        Word: {
+          select: {
+            word: true,
+            Mean: {
+              select: {
+                mean: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!wrong)
+      throw new NotFoundException('오답노트에 존재하지 않는 아이디의 단어');
+
+    return {
+      word_id: wrong.word_id,
+      word: wrong.Word.word,
+      mean: wrong.Word.Mean.mean,
+    };
+  }
+
   async findRandWordFromWrong(userId: number, skip: number) {
     const rand = await this.wrong.findFirst({
       where: {
