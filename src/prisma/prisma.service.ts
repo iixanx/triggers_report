@@ -5,7 +5,7 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient, Word } from '@prisma/client';
 
 @Injectable()
 export class PrismaService
@@ -81,5 +81,49 @@ export class PrismaService
         user_id: id,
       },
     });
+  }
+
+  async findWordByUserIdAndWord(userId: number, word: string) {
+    return await this.word.findFirst({
+      where: {
+        user_id: userId,
+        word,
+      },
+      select: {
+        word_id: true,
+        user_id: true,
+        word: true,
+        Mean: {
+          select: {
+            mean: true,
+          },
+        },
+      },
+    });
+  }
+
+  async createWord(userId: number, word: string, mean: string) {
+    let newWord: Word;
+    await this.$transaction(
+      async (tx) => {
+        newWord = await tx.word.create({
+          data: {
+            user_id: userId,
+            word,
+          },
+        });
+
+        await tx.mean.create({
+          data: {
+            word_id: newWord.word_id,
+            mean,
+          },
+        });
+      },
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead,
+      },
+    );
+    return newWord;
   }
 }

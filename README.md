@@ -436,7 +436,7 @@
         </tr>
         <tr>
           <td></td>
-          <td>meaning</td>
+          <td>mean</td>
           <td>
             <li>Type: String</li>
             <li>Not Null</li>
@@ -482,6 +482,11 @@
           <td>Unauthorized</td>
           <td>Header의 authorization이 유효하지 않은 경우</td>
           <td/>
+        </tr>
+        <tr>
+          <td>409</td>
+          <td>Conflict</td>
+          <td>중복 단어를 추가하는 경우</td>
         </tr>
         <tr>
           <td>500</td>
@@ -561,7 +566,7 @@
                 </td>
               </tr>
               <tr>
-                <td>meaning</td>
+                <td>mean</td>
                 <td>
                   <li>Type: String</li>
                   <li>Not Null</li>
@@ -657,7 +662,7 @@
                 </td>
               </tr>
               <tr>
-                <td>meaning</td>
+                <td>mean</td>
                 <td>
                   <li>Type: String</li>
                   <li>Not Null</li>
@@ -750,7 +755,7 @@
                 </td>
               </tr>
               <tr>
-                <td>meaning</td>
+                <td>mean</td>
                 <td>
                   <li>Type: String</li>
                   <li>Not Null</li>
@@ -831,7 +836,7 @@
         </tr>
         <tr>
           <td/>
-          <td>meaning</td>
+          <td>mean</td>
           <td>
             <li>Type: String</li>
             <li>Nullable</li>
@@ -873,7 +878,7 @@
                 </td>
               </tr>
               <tr>
-                <td>meaning</td>
+                <td>mean</td>
                 <td>
                   <li>Type: String</li>
                   <li>Not Null</li>

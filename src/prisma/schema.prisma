@@ -25,6 +25,7 @@ model Word {
   Mean        Mean[]
   User        User   @relation(fields: [user_id], references: [user_id])
 
+  @@unique([user_id, word])
   @@index([user_id], map: "Word_user_id_fkey")
 }
 

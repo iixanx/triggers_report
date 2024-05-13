@@ -1,11 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { WordService } from './word.service';
 import { WordController } from './word.controller';
-import { Logger } from 'winston';
-import { AuthUtil } from 'src/auth/util/auth.util';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
-  providers: [WordService, Logger, AuthUtil],
+  providers: [WordService, Logger, PrismaService, JwtService],
   controllers: [WordController]
 })
 export class WordModule {}

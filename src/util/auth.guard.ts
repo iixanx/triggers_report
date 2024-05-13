@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  Inject,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -14,7 +15,7 @@ import { User } from '@prisma/client';
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    private jwt: JwtService,
+    @Inject(JwtService) private jwt: JwtService,
     private prisma: PrismaService,
     private logger: Logger,
   ) {}
