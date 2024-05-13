@@ -268,7 +268,7 @@ export class PrismaService
       },
       data: {
         coin: {
-          increment: coin
+          increment: coin,
         },
       },
     });
@@ -295,6 +295,53 @@ export class PrismaService
         word_id: wordId,
         mean_id: meanId,
         is_correct: isCorrect,
+      },
+    });
+  }
+
+  async findRandWordFromWrong(userId: number, skip: number) {
+    const rand = await this.wrong.findFirst({
+      where: {
+        user_id: userId,
+      },
+      skip: skip - 1,
+    });
+    if (!rand) throw new NotFoundException('존재하지 않는 오답노트의 단어');
+
+    const word = await this.word.findUnique({
+      where: {
+        word_id: rand.word_id,
+      },
+    });
+    if (!word) throw new NotFoundException('존재하지 않는 단어');
+
+    const mean = await this.mean.findUnique({
+      where: {
+        word_id: word.word_id,
+      },
+    });
+
+    return {
+      word,
+      mean,
+    };
+  }
+
+  async findMaxIdFromWrong(userId: number) {
+    const counts = await this.wrong.count({
+      where: {
+        user_id: userId,
+      },
+    });
+
+    return counts;
+  }
+
+  async createWrong(userId: number, wordId: number) {
+    return await this.wrong.create({
+      data: {
+        word_id: wordId,
+        user_id: userId,
       },
     });
   }

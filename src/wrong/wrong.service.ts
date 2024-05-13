@@ -8,6 +8,7 @@ import { PostRandomRequestDto } from './dto/request/postRandom.request.dto';
 import { GetRandomResponseDto } from './dto/response/getRandom.response.dto';
 import { GetWordResponseDto } from './dto/response/getWord.response.dto';
 import { PostRandomResponseDto } from './dto/response/postRandom.response.dto';
+import { random } from 'src/util/random.util';
 
 @Injectable()
 export class WrongService implements IWrongService {
@@ -21,7 +22,23 @@ export class WrongService implements IWrongService {
   getRand = async (
     request: GetRandomRequestDto,
   ): Promise<GetRandomResponseDto> => {
-    return;
+    const { user } = request;
+
+    const maxId = await this.prisma.findMaxIdFromWrong(user.user_id);
+    const rand = random(1, maxId);
+
+    const randWord = await this.prisma.findRandWordFromWrong(
+      user.user_id,
+      rand,
+    );
+    const anotherMeans = await this.prisma.findRandMeanList();
+    anotherMeans.push(randWord.mean);
+
+    return {
+      word_id: randWord.word.word_id,
+      word: randWord.word.word,
+      means: anotherMeans,
+    };
   };
   getList = async (request: GetListRequestDto): Promise<GetListRequestDto> => {
     return;

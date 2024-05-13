@@ -1,1 +1,5 @@
-export class GetRandomRequestDto {}
+import { User } from '@prisma/client';
+
+export class GetRandomRequestDto {
+  user: User;
+}

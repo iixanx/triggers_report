@@ -1336,21 +1336,6 @@
                   </table>
                 </td>
               </tr>
-              <tr>
-                <td>earned_coins</td>
-                <td>
-                  <li>Type: Number</li>
-                  <li>Not Null</li>
-                  <li>Min : 1, Max : 7</li>
-                </td>
-              </tr>
-              <tr>
-                <td>is_correct</td>
-                <td>
-                  <li>Type: Boolean</li>
-                  <li>Not Null</li>
-                </td>
-              </tr>
             </table>
           </td>
         </tr>
