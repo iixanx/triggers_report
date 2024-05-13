@@ -94,10 +94,12 @@ export class WrongService implements IWrongService {
     const { wordId } = param;
     const { meanId, user } = request;
 
+    const isInWrong = await this.prisma.findWrongById(user.user_id, wordId);
+    if (!isInWrong)
+      throw new NotFoundException('오답노트에 등록되지 않은 아이디');
+
     const thisWord = await this.prisma.findWordById(wordId);
     const thisMean = await this.prisma.findMeanById(meanId);
-    if (!thisWord || !thisMean)
-      throw new NotFoundException('오답노트에 등록되지 않은 아이디');
 
     let earnedCoin = 0;
     let isCorrect = false;
