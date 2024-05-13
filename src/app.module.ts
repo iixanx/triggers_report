@@ -5,6 +5,7 @@ import { WinstonModule } from 'nest-winston';
 import { WinstonInstance } from './util/winstonLgger.util';
 import { WordModule } from './word/word.module';
 import { QuizModule } from './quiz/quiz.module';
+import { WrongModule } from './wrong/wrong.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { QuizModule } from './quiz/quiz.module';
     AuthModule,
     WordModule,
     QuizModule,
+    WrongModule,
   ],
 })
 export class AppModule {}
