@@ -18,12 +18,13 @@ model User {
 }
 
 model Word {
-  word_id     Int    @id @default(autoincrement())
-  user_id     Int
-  word        String
-  wrong_count Int    @default(0)
-  Mean        Mean?
-  User        User   @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  word_id       Int    @id @default(autoincrement())
+  user_id       Int
+  word          String
+  wrong_count   Int    @default(0)
+  correct_count Int    @default(0)
+  Mean          Mean?
+  User          User   @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
 
   @@unique([user_id, word])
   @@index([user_id], map: "Word_user_id_fkey")
@@ -40,12 +41,13 @@ model Mean {
 }
 
 model History {
-  user_id Int
-  word_id Int
-  mean_id Int
-  count   Int  @default(0)
-  Mean    Mean @relation(fields: [mean_id], references: [mean_id], onDelete: Cascade)
+  user_id    Int
+  word_id    Int
+  mean_id    Int
+  is_correct Boolean
+  createdAt  DateTime @default(now())
+  history_id Int      @id @default(autoincrement())
+  Mean       Mean     @relation(fields: [mean_id], references: [mean_id], onDelete: Cascade)
 
-  @@id([user_id, word_id])
   @@index([mean_id], map: "History_mean_id_fkey")
 }
