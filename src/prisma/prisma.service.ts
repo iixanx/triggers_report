@@ -83,14 +83,32 @@ export class PrismaService
     });
   }
 
+  async findWordById(wordId: number) {
+    const word = await this.word.findUnique({
+      where: {
+        word_id: wordId,
+      },
+    });
+    const mean = await this.mean.findUnique({
+      where: {
+        word_id: word.word_id,
+      }
+    })
+
+    return {
+      word,
+      mean
+    }
+  }
+
   async findWordList(userId: number, page: number) {
     return await this.word.findMany({
       where: {
         user_id: userId,
       },
       take: 10,
-      skip: page * 10
-    })
+      skip: page * 10,
+    });
   }
 
   async findWordByUserIdAndWord(userId: number, word: string) {
@@ -110,6 +128,16 @@ export class PrismaService
         },
       },
     });
+  }
+
+  async findMaxIdFromWord(userId: number) {
+    const counts = await this.word.count({
+      where: {
+        user_id: userId,
+      },
+    });
+
+    return counts;
   }
 
   async createWord(userId: number, word: string, mean: string) {

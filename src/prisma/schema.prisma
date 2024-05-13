@@ -22,7 +22,7 @@ model Word {
   user_id     Int
   word        String
   wrong_count Int    @default(0)
-  Mean        Mean[]
+  Mean        Mean?
   User        User   @relation(fields: [user_id], references: [user_id])
 
   @@unique([user_id, word])
@@ -31,7 +31,7 @@ model Word {
 
 model Mean {
   mean_id Int       @id @default(autoincrement())
-  word_id Int
+  word_id Int       @unique
   mean    String
   History History[]
   Word    Word      @relation(fields: [word_id], references: [word_id])

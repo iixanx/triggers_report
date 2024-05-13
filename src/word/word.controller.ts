@@ -53,13 +53,20 @@ export class WordController implements IWordController {
     @Query() query: GetListQueryRequestDto,
     @Body() request: GetListRequestDto,
   ): Promise<GetListResponseDto> {
-    this.logger.log('/list')
+    this.logger.log('/list');
     const data = await this.service.getList(query, request);
 
     return data;
   }
-  async getRand(request: GetRandomRequestDto): Promise<GetRandomResponseDto> {
-    throw new Error('Method not implemented.');
+
+  @Get('rand')
+  async getRand(
+    @Body() request: GetRandomRequestDto,
+  ): Promise<GetRandomResponseDto> {
+    this.logger.log('/rand');
+    const data = await this.service.getRand(request);
+
+    return data;
   }
   async getWord(request: GetWordRequestDto): Promise<GetWordResponseDto> {
     throw new Error('Method not implemented.');

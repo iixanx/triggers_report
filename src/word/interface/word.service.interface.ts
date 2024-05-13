@@ -14,7 +14,7 @@ import { UpdateWordResponseDto } from '../dto/response/updateWord.response.dto';
 export interface IWordService {
   newWord: (request: NewWordRequestDto) => Promise<NewWordResponseDto>;
   getList: (query: GetListQueryRequestDto, request: GetListRequestDto) => Promise<GetListResponseDto>;
-  getRand: (query, request: GetRandomRequestDto) => Promise<GetRandomResponseDto>;
+  getRand: (request: GetRandomRequestDto) => Promise<GetRandomResponseDto>;
   getWord: (request: GetWordRequestDto) => Promise<GetWordResponseDto>;
   updateWord: (request: UpdateWordRequestDto) => Promise<UpdateWordResponseDto>;
   deleteWord: (request: DeleteWordRequestDto) => Promise<DeleteWordResponseDto>;

@@ -81,11 +81,22 @@ export class WordService implements IWordService {
       words: wordList,
     };
   };
+
   getRand = async (
-    query,
     request: GetRandomRequestDto,
   ): Promise<GetRandomResponseDto> => {
-    return;
+    const { user } = request;
+
+    const count = await this.prisma.findMaxIdFromWord(user.user_id);
+
+    const randId = Math.floor(Math.random() * count) + 1;
+    const word = await this.prisma.findWordById(randId);
+
+    return {
+      word_id: word.word.word_id,
+      word: word.word.word,
+      mean: word.mean.mean,
+    };
   };
   getWord = async (request: GetWordRequestDto): Promise<GetWordResponseDto> => {
     return;
