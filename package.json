@@ -9,7 +9,7 @@
     "build": "nest build",
     "start": "clear && nest start",
     "start:dev": "clear && nest start --watch",
-    "start:prod": "clear && node dist/main",
+    "start:prod": "nest build && clear && node dist/main",
     "test:unit": "jest",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",

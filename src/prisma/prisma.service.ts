@@ -83,6 +83,16 @@ export class PrismaService
     });
   }
 
+  async findWordList(userId: number, page: number) {
+    return await this.word.findMany({
+      where: {
+        user_id: userId,
+      },
+      take: 10,
+      skip: page * 10
+    })
+  }
+
   async findWordByUserIdAndWord(userId: number, word: string) {
     return await this.word.findFirst({
       where: {

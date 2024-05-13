@@ -1,7 +1,19 @@
-import { Body, Controller, Inject, Logger, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Logger,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { IWordController } from './interface/word.controller.interface';
 import { DeleteWordRequestDto } from './dto/request/deleteWord.request.dto';
-import { GetListRequestDto } from './dto/request/getList.request.dto';
+import {
+  GetListQueryRequestDto,
+  GetListRequestDto,
+} from './dto/request/getList.request.dto';
 import { GetRandomRequestDto } from './dto/request/getRandom.request.dto';
 import { GetWordRequestDto } from './dto/request/getWord.request.dto';
 import { NewWordRequestDto } from './dto/request/newWord.request.dto';
@@ -27,14 +39,24 @@ export class WordController implements IWordController {
   }
 
   @Post('new')
-  async newWord(@Body() request: NewWordRequestDto): Promise<NewWordResponseDto> {
+  async newWord(
+    @Body() request: NewWordRequestDto,
+  ): Promise<NewWordResponseDto> {
     this.logger.log('/new');
     const data = await this.service.newWord(request);
 
     return data;
   }
-  async getList(request: GetListRequestDto): Promise<GetListResponseDto> {
-    throw new Error('Method not implemented.');
+
+  @Get('list')
+  async getList(
+    @Query() query: GetListQueryRequestDto,
+    @Body() request: GetListRequestDto,
+  ): Promise<GetListResponseDto> {
+    this.logger.log('/list')
+    const data = await this.service.getList(query, request);
+
+    return data;
   }
   async getRand(request: GetRandomRequestDto): Promise<GetRandomResponseDto> {
     throw new Error('Method not implemented.');

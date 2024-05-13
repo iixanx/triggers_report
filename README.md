@@ -550,27 +550,38 @@
                 <th>제약 조건</th>
               </tr>
               <tr>
-                <td>word_id</td>
+                <td>words</td>
                 <td>
-                  <li>Type: Number</li>
-                  <li>Not Null</li>
-                  <li>0 <= word_id인 자연수</li>
-                </td>
-              </tr>
-              <tr>
-                <td>word</td>
-                <td>
-                  <li>Type: String</li>
-                  <li>Not Null</li>
-                  <li>A-Za-z의 정규식을 따르는 문자열</li>
-                </td>
-              </tr>
-              <tr>
-                <td>mean</td>
-                <td>
-                  <li>Type: String</li>
-                  <li>Not Null</li>
-                  <li>word에 해당하는 단어의 뜻</li>
+                  <table>
+                    <tr>
+                      <th>키</th>
+                      <th>제약 조건</th>
+                    </tr>
+                    <tr>
+                      <td>word_id</td>
+                      <td>
+                        <li>Type: Number</li>
+                        <li>Not Null</li>
+                        <li>0 <= word_id인 자연수</li>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>word</td>
+                      <td>
+                        <li>Type: String</li>
+                        <li>Not Null</li>
+                        <li>A-Za-z의 정규식을 따르는 문자열</li>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>mean</td>
+                      <td>
+                        <li>Type: String</li>
+                        <li>Not Null</li>
+                        <li>word에 해당하는 단어의 뜻</li>
+                      </td>
+                    </tr>
+                  </table>
                 </td>
               </tr>
             </table>

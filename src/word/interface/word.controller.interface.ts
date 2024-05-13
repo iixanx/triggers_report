@@ -13,8 +13,8 @@ import { UpdateWordResponseDto } from "../dto/response/updateWord.response.dto";
 
 export interface IWordController {
   newWord(request: NewWordRequestDto): Promise<NewWordResponseDto>;
-  getList(request: GetListRequestDto): Promise<GetListResponseDto>;
-  getRand(request: GetRandomRequestDto): Promise<GetRandomResponseDto>;
+  getList(query, request: GetListRequestDto): Promise<GetListResponseDto>;
+  getRand(qeury, request: GetRandomRequestDto): Promise<GetRandomResponseDto>;
   getWord(request: GetWordRequestDto): Promise<GetWordResponseDto>;
   updateWord(request: UpdateWordRequestDto): Promise<UpdateWordResponseDto>;
   deleteWord(request: DeleteWordRequestDto): Promise<DeleteWordResponseDto>;

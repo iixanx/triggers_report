@@ -1,13 +1,18 @@
 import {
+  BadRequestException,
   ConflictException,
   Inject,
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { IWordService } from './interface/word.service.interface';
 import { DeleteWordRequestDto } from './dto/request/deleteWord.request.dto';
-import { GetListRequestDto } from './dto/request/getList.request.dto';
+import {
+  GetListQueryRequestDto,
+  GetListRequestDto,
+} from './dto/request/getList.request.dto';
 import { GetRandomRequestDto } from './dto/request/getRandom.request.dto';
 import { GetWordRequestDto } from './dto/request/getWord.request.dto';
 import { NewWordRequestDto } from './dto/request/newWord.request.dto';
@@ -50,10 +55,34 @@ export class WordService implements IWordService {
       word_id: newWord.word_id,
     };
   };
-  getList = async (request: GetListRequestDto): Promise<GetListResponseDto> => {
-    return;
+  getList = async (
+    query: GetListQueryRequestDto,
+    request: GetListRequestDto,
+  ): Promise<GetListResponseDto> => {
+    const { page } = query;
+    const { user } = request;
+
+    const pageNum = page == undefined ? 0 : Number(page);
+    if (Number.isNaN(pageNum) && page) throw new BadRequestException();
+
+    let wordList: Word[];
+
+    try {
+      wordList = await this.prisma.findWordList(user.user_id, pageNum);
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException('데이터베이스 트랜잭션 오류');
+    }
+
+    if (wordList.every((e) => null))
+      throw new NotFoundException('해당 페이지에 단어 없음');
+
+    return {
+      words: wordList,
+    };
   };
   getRand = async (
+    query,
     request: GetRandomRequestDto,
   ): Promise<GetRandomResponseDto> => {
     return;
