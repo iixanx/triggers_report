@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Headers,
+  HttpCode,
   Inject,
   Logger,
   Post,
@@ -49,6 +50,7 @@ export class AuthController implements IAuthController {
   }
 
   @UseGuards(AuthGuard)
+  @HttpCode(204)
   @Delete('unsub')
   async unsub(
     @Headers() header: TokenRequestDto,

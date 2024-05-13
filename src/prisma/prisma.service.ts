@@ -1,11 +1,12 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   OnModuleDestroy,
   OnModuleInit,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient, Word } from '@prisma/client';
 
 @Injectable()
 export class PrismaService
@@ -79,6 +80,120 @@ export class PrismaService
     await this.user.delete({
       where: {
         user_id: id,
+      },
+    });
+  }
+
+  async findWordById(wordId: number) {
+    const word = await this.word.findUnique({
+      where: {
+        word_id: wordId,
+      },
+    });
+
+    if (!word) throw new NotFoundException('존재하지 않는 아이디의 단어');
+
+    const mean = await this.mean.findUnique({
+      where: {
+        word_id: word.word_id,
+      },
+    });
+
+    return {
+      word,
+      mean,
+    };
+  }
+
+  async findWordList(userId: number, page: number) {
+    return await this.word.findMany({
+      where: {
+        user_id: userId,
+      },
+      take: 10,
+      skip: page * 10,
+    });
+  }
+
+  async findWordByUserIdAndWord(userId: number, word: string) {
+    return await this.word.findFirst({
+      where: {
+        user_id: userId,
+        word,
+      },
+      select: {
+        word_id: true,
+        user_id: true,
+        word: true,
+        Mean: {
+          select: {
+            mean: true,
+          },
+        },
+      },
+    });
+  }
+
+  async findMaxIdFromWord(userId: number) {
+    const counts = await this.word.count({
+      where: {
+        user_id: userId,
+      },
+    });
+
+    return counts;
+  }
+
+  async createWord(userId: number, word: string, mean: string) {
+    let newWord: Word;
+    await this.$transaction(
+      async (tx) => {
+        newWord = await tx.word.create({
+          data: {
+            user_id: userId,
+            word,
+          },
+        });
+
+        await tx.mean.create({
+          data: {
+            word_id: newWord.word_id,
+            mean,
+          },
+        });
+      },
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead,
+      },
+    );
+    return newWord;
+  }
+
+  async updateWord(wordId: number, word: string, mean: string) {
+    await this.$transaction([
+      this.word.update({
+        where: {
+          word_id: wordId,
+        },
+        data: {
+          word,
+        },
+      }),
+      this.mean.update({
+        where: {
+          word_id: wordId,
+        },
+        data: {
+          mean,
+        },
+      }),
+    ]);
+  }
+
+  async deleteWordById(wordId: number) {
+    await this.word.delete({
+      where: {
+        word_id: wordId,
       },
     });
   }

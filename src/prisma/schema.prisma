@@ -22,18 +22,19 @@ model Word {
   user_id     Int
   word        String
   wrong_count Int    @default(0)
-  Mean        Mean[]
-  User        User   @relation(fields: [user_id], references: [user_id])
+  Mean        Mean?
+  User        User   @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
 
+  @@unique([user_id, word])
   @@index([user_id], map: "Word_user_id_fkey")
 }
 
 model Mean {
   mean_id Int       @id @default(autoincrement())
-  word_id Int
+  word_id Int       @unique
   mean    String
   History History[]
-  Word    Word      @relation(fields: [word_id], references: [word_id])
+  Word    Word      @relation(fields: [word_id], references: [word_id], onDelete: Cascade)
 
   @@index([word_id], map: "Mean_word_id_fkey")
 }
@@ -43,7 +44,7 @@ model History {
   word_id Int
   mean_id Int
   count   Int  @default(0)
-  Mean    Mean @relation(fields: [mean_id], references: [mean_id])
+  Mean    Mean @relation(fields: [mean_id], references: [mean_id], onDelete: Cascade)
 
   @@id([user_id, word_id])
   @@index([mean_id], map: "History_mean_id_fkey")

@@ -436,7 +436,7 @@
         </tr>
         <tr>
           <td></td>
-          <td>meaning</td>
+          <td>mean</td>
           <td>
             <li>Type: String</li>
             <li>Not Null</li>
@@ -462,8 +462,11 @@
                 <th>제약 조건</th>
               </tr>
               <tr>
-                <td/>
-                <td/>
+                <td>word_id</td>
+                <td>
+                  <li>Type: Number</li>
+                  <li>Not Null</li>
+                </td>
               </tr>
             </table>
           </td>
@@ -479,6 +482,11 @@
           <td>Unauthorized</td>
           <td>Header의 authorization이 유효하지 않은 경우</td>
           <td/>
+        </tr>
+        <tr>
+          <td>409</td>
+          <td>Conflict</td>
+          <td>중복 단어를 추가하는 경우</td>
         </tr>
         <tr>
           <td>500</td>
@@ -542,27 +550,38 @@
                 <th>제약 조건</th>
               </tr>
               <tr>
-                <td>word_id</td>
+                <td>words</td>
                 <td>
-                  <li>Type: Number</li>
-                  <li>Not Null</li>
-                  <li>0 <= word_id인 자연수</li>
-                </td>
-              </tr>
-              <tr>
-                <td>word</td>
-                <td>
-                  <li>Type: String</li>
-                  <li>Not Null</li>
-                  <li>A-Za-z의 정규식을 따르는 문자열</li>
-                </td>
-              </tr>
-              <tr>
-                <td>meaning</td>
-                <td>
-                  <li>Type: String</li>
-                  <li>Not Null</li>
-                  <li>word에 해당하는 단어의 뜻</li>
+                  <table>
+                    <tr>
+                      <th>키</th>
+                      <th>제약 조건</th>
+                    </tr>
+                    <tr>
+                      <td>word_id</td>
+                      <td>
+                        <li>Type: Number</li>
+                        <li>Not Null</li>
+                        <li>0 <= word_id인 자연수</li>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>word</td>
+                      <td>
+                        <li>Type: String</li>
+                        <li>Not Null</li>
+                        <li>A-Za-z의 정규식을 따르는 문자열</li>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>mean</td>
+                      <td>
+                        <li>Type: String</li>
+                        <li>Not Null</li>
+                        <li>word에 해당하는 단어의 뜻</li>
+                      </td>
+                    </tr>
+                  </table>
                 </td>
               </tr>
             </table>
@@ -654,7 +673,7 @@
                 </td>
               </tr>
               <tr>
-                <td>meaning</td>
+                <td>mean</td>
                 <td>
                   <li>Type: String</li>
                   <li>Not Null</li>
@@ -747,7 +766,7 @@
                 </td>
               </tr>
               <tr>
-                <td>meaning</td>
+                <td>mean</td>
                 <td>
                   <li>Type: String</li>
                   <li>Not Null</li>
@@ -822,16 +841,16 @@
           <td>word</td>
           <td>
             <li>Type: String</li>
-            <li>Nullable</li>
+            <li>Nullable (json 상에서 누락 가능 / null 금지)</li>
             <li>A-Za-z의 정규식을 따르는 문자열</li>
           </td>
         </tr>
         <tr>
           <td/>
-          <td>meaning</td>
+          <td>mean</td>
           <td>
             <li>Type: String</li>
-            <li>Nullable</li>
+            <li>Nullable (json 상에서 누락 가능 / null 금지)</li>
           </td>
         </tr>
       </table>
@@ -870,7 +889,7 @@
                 </td>
               </tr>
               <tr>
-                <td>meaning</td>
+                <td>mean</td>
                 <td>
                   <li>Type: String</li>
                   <li>Not Null</li>
@@ -899,13 +918,6 @@
           <td/>
         </tr>
         <!--403과 404 통합-->
-        <tr>
-          <td>409</td>
-          <td>Conflict</td>
-          <td>해당 단어에 트랜잭션이 진행 중</td>
-          <td/>
-        </tr>
-        <!--트랜잭션 아이솔레이션 레벨 : Read Committed, 진행 중 409-->
         <tr>
           <td>500</td>
           <td>Internal Server Error</td>
@@ -992,12 +1004,8 @@
   </li>
 </ul>
 <h2 id="quiz">퀴즈 도메인 ("/quiz")</h2>
-2.
-유저는 퀴즈를 조회 할 수 있습니다. 조회 시, 단어장에서 랜덤으로 출제됩니다.
-(문제 형식은 4지선다, 영어단어 한글 뜻맞추기)
-예시) apple 1. 사과 ,2. 바나나, 3. 포도, 4. 망고
-3.
-유저는 조회한 퀴즈를 풀 수 있습니다. 풀이 제출 시, 정답 결과를 바로 볼 수 있습니다.<br/>
+2. 유저는 퀴즈를 조회 할 수 있습니다. 조회 시, 단어장에서 4지선다 형식의 문제가 랜덤으로 출제됩니다. <br/>
+3. 유저는 조회한 퀴즈를 풀 수 있습니다. 풀이 제출 시, 정답 결과를 바로 볼 수 있습니다.<br/>
 3-1. (개인적 추가) 퀴즈를 맞출 경우 골드를 획득할 수 있습니다. 골드는 1회당 2~13 사이의 양을 무작위로 받아갈 수 있습니다.<br/>
 3-2. (개인적 추가) 퀴즈를 틀릴 경우 해당 문제는 오답 처리되며, "오답 노트"에 추가됩니다.
 <ul>
