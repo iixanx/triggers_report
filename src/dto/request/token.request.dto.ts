@@ -3,8 +3,8 @@ import { IsString } from 'class-validator';
 
 export class TokenRequestDto {
   @Expose({
-    name: 'authorization',
+    name: 'Authorization',
   })
   @IsString()
-  token: string;
+  authorization: string;
 }

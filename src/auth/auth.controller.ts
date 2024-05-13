@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Headers,
   Inject,
   Logger,
@@ -59,10 +60,15 @@ export class AuthController implements IAuthController {
     return data;
   }
 
-  refresh(
+  @UseGuards(AuthGuard)
+  @Get('refresh')
+  async refresh(
     @Headers() header: TokenRequestDto,
     @Body() request: RefreshRequestDto,
   ): Promise<RefreshResponseDto> {
-    throw new Error('Method not implemented.');
+    this.logger.log('/refresh');
+    const data = await this.service.refresh(header, request);
+
+    return data;
   }
 }

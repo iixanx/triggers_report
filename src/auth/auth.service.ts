@@ -7,6 +7,7 @@ import {
   InternalServerErrorException,
   Logger,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { IAuthService } from './interface/auth.service.interface';
 import { SignUpRequestDto } from './dto/request/signup.request.dto';
@@ -72,7 +73,7 @@ export class AuthService implements IAuthService {
       throw new BadRequestException('비밀번호가 일치하지 않음');
 
     const accessToken = await this.util.genAccessToken(thisUser.user_id);
-    const refreshToken = await this.util.genRefreshToken(accessToken);
+    const refreshToken = await this.util.genRefreshToken(thisUser.user_id);
 
     return {
       accessToken,
@@ -81,12 +82,12 @@ export class AuthService implements IAuthService {
   };
 
   unsub = async (request: UnsubRequestDto): Promise<UnsubResponseDto> => {
-    const { password, user } = request;
+    const { password, user, isRefresh } = request;
 
-    const thisUser = await this.prisma.findUserById(user.user_id);
-    if (!thisUser) throw new NotFoundException('존재하지 않는 계정');
+    if (isRefresh)
+      throw new UnauthorizedException('리프레시 토큰 사용 불가한 API');
 
-    if (!(await compare(password, thisUser.password)))
+    if (!(await compare(password, user.password)))
       throw new ForbiddenException('비밀번호가 일치하지 않음');
 
     try {
@@ -103,6 +104,17 @@ export class AuthService implements IAuthService {
     header: TokenRequestDto,
     request: RefreshRequestDto,
   ): Promise<RefreshResponseDto> => {
-    return;
+    const { authorization } = header;
+    const { user, isRefresh } = request;
+
+    if (!isRefresh)
+      throw new UnauthorizedException('액세스 토큰 사용 불가한 API');
+
+    const newAccessToken = await this.util.genAccessToken(user.user_id);
+
+    return {
+      accessToken: newAccessToken,
+      refreshToken: authorization.split(' ')[1],
+    };
   };
 }

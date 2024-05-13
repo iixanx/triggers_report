@@ -10,7 +10,10 @@ export class AuthUtil implements IAuthUtil {
   ) {}
   async genAccessToken(userId: Number) {
     const accessToken = await this.jwt.signAsync(
-      { userId },
+      { 
+        userId,
+        isRefresh: false
+      },
       {
         secret: this.config.get<string>('JWT_SECRET'),
         privateKey: this.config.get<string>('JWT_PRIVATE_KEY'),
@@ -19,9 +22,11 @@ export class AuthUtil implements IAuthUtil {
 
     return accessToken;
   }
-  async genRefreshToken(token: String) {
+  async genRefreshToken(userId: number) {
     const refreshToken = await this.jwt.signAsync(
-      { token },
+      { 
+        userId,
+        isRefresh: true },
       {
         secret: this.config.get<string>('JWT_SECRET'),
         privateKey: this.config.get<string>('JWT_PRIVATE_KEY'),

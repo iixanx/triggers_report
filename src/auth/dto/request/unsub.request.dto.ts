@@ -9,5 +9,7 @@ export class UnsubRequestDto {
   @IsString()
   password: string;
 
+  isRefresh: boolean;
+
   user: User;
 }
