@@ -6,7 +6,7 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Prisma, PrismaClient, Word } from '@prisma/client';
+import { Mean, Prisma, PrismaClient, Word } from '@prisma/client';
 
 @Injectable()
 export class PrismaService
@@ -105,6 +105,26 @@ export class PrismaService
     };
   }
 
+  async findRandWordByCount(userId: number, skip: number) {
+    const word = await this.word.findFirst({
+      where: {
+        user_id: userId,
+      },
+      skip: skip - 1,
+    });
+
+    const mean = await this.mean.findUnique({
+      where: {
+        word_id: word.word_id,
+      },
+    });
+
+    return {
+      word,
+      mean,
+    };
+  }
+
   async findWordList(userId: number, page: number) {
     return await this.word.findMany({
       where: {
@@ -113,6 +133,21 @@ export class PrismaService
       take: 10,
       skip: page * 10,
     });
+  }
+
+  async findRandMeanList() {
+    const max = await this.mean.count();
+    let meanList: Mean[] = [];
+
+    for (let i = 0; i < 3; i++) {
+      const rand = Math.floor(Math.random() * max) + 1;
+      const mean = await this.mean.findFirst({
+        skip: rand - 1,
+      });
+      meanList.push(mean);
+    }
+
+    return meanList;
   }
 
   async findWordByUserIdAndWord(userId: number, word: string) {
@@ -194,6 +229,14 @@ export class PrismaService
     await this.word.delete({
       where: {
         word_id: wordId,
+      },
+    });
+  }
+
+  async findMeanById(meanId: number) {
+    return await this.mean.findUnique({
+      where: {
+        mean_id: meanId,
       },
     });
   }

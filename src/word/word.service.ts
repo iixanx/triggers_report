@@ -88,7 +88,7 @@ export class WordService implements IWordService {
     const count = await this.prisma.findMaxIdFromWord(user.user_id);
 
     const randId = Math.floor(Math.random() * count) + 1;
-    const word = await this.prisma.findWordById(randId);
+    const word = await this.prisma.findRandWordByCount(user.user_id, randId);
 
     return {
       word_id: word.word.word_id,

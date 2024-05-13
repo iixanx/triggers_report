@@ -1080,6 +1080,14 @@
                       <th>제약 조건</th>
                     </tr>
                     <tr>
+                      <td>word_id</td>
+                      <td>
+                        <li>Type: Number</li>
+                        <li>Not Null</li>
+                        <li>0 <= word_id인 자연수</li>
+                      </td>
+                    </tr>
+                    <tr>
                       <td>mean_id</td>
                       <td>
                         <li>Type: Number</li>
