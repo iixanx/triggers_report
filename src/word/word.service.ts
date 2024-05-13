@@ -31,6 +31,7 @@ import { NewWordResponseDto } from './dto/response/newWord.response.dto';
 import { UpdateWordResponseDto } from './dto/response/updateWord.response.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Word } from '@prisma/client';
+import { random } from 'src/util/random.util';
 
 @Injectable()
 export class WordService implements IWordService {
@@ -87,7 +88,7 @@ export class WordService implements IWordService {
 
     const count = await this.prisma.findMaxIdFromWord(user.user_id);
 
-    const randId = Math.floor(Math.random() * count) + 1;
+    const randId = random(1, count);
     const word = await this.prisma.findRandWordByCount(user.user_id, randId);
 
     return {

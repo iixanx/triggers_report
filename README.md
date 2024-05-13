@@ -1209,8 +1209,8 @@
                 <td>earned_coins</td>
                 <td>
                   <li>Type: Number</li>
-                  <li>Nullable (if is_correct: false then null)</li>
-                  <li>Min: 2, Max: 13</li>
+                  <li>Not Null</li>
+                  <li>Min: 7 (when wrong then 0), Max: 13</li>
                 </td>
               </tr>
             </table>
@@ -1334,21 +1334,6 @@
                       </td>
                     </tr>
                   </table>
-                </td>
-              </tr>
-              <tr>
-                <td>earned_coins</td>
-                <td>
-                  <li>Type: Number</li>
-                  <li>Not Null</li>
-                  <li>Min : 1, Max : 7</li>
-                </td>
-              </tr>
-              <tr>
-                <td>is_correct</td>
-                <td>
-                  <li>Type: Boolean</li>
-                  <li>Not Null</li>
                 </td>
               </tr>
             </table>
@@ -1593,7 +1578,7 @@
   <li>
     <details>
       <summary>
-        <h3>POST /rand</h3>
+        <h3>POST /:word_id</h3>
         랜덤으로 조회한 오답노트 내의 문제를 풀이합니다. <br/>
         정답을 (해당 단어 문제를 틀린 횟수) × 2회만큼 맞출 경우 해당 단어는 오답 노트에서 제외됩니다.
       </summary>
@@ -1676,8 +1661,8 @@
                 <td>earned_coins</td>
                 <td>
                   <li>Type: Number</li>
-                  <li>Nullable (if is_correct: false then null)</li>
-                  <li>Min: 1, Max: 7</li>
+                  <li>Not Null</li>
+                  <li>Min: 0, Max: 7</li>
                 </td>
               </tr>
             </table>
@@ -2087,8 +2072,8 @@
                       <td>earned_coin</td>
                       <td>
                         <li>Type : Number</li>
-                        <li>Nullable (if has_correct is false then null)</li>
-                        <li>Min : 1, Max : 13</li>
+                        <li>Not Null</li>
+                        <li>Min : 0, Max : 13</li>
                       </td>
                     </tr>
                   </table>

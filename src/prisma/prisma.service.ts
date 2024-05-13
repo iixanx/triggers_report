@@ -268,7 +268,7 @@ export class PrismaService
       },
       data: {
         coin: {
-          increment: coin
+          increment: coin,
         },
       },
     });
@@ -295,6 +295,126 @@ export class PrismaService
         word_id: wordId,
         mean_id: meanId,
         is_correct: isCorrect,
+      },
+    });
+  }
+
+  async findWrongById(userId: number, wordId: number) {
+    const wrong = await this.wrong.findUnique({
+      where: {
+        user_id_word_id: {
+          user_id: userId,
+          word_id: wordId,
+        },
+      },
+      select: {
+        word_id: true,
+        Word: {
+          select: {
+            word: true,
+            Mean: {
+              select: {
+                mean: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!wrong)
+      throw new NotFoundException('오답노트에 존재하지 않는 아이디의 단어');
+
+    return {
+      word_id: wrong.word_id,
+      word: wrong.Word.word,
+      mean: wrong.Word.Mean.mean,
+    };
+  }
+
+  async findRandWordFromWrong(userId: number, skip: number) {
+    const rand = await this.wrong.findFirst({
+      where: {
+        user_id: userId,
+      },
+      skip: skip - 1,
+    });
+    if (!rand) throw new NotFoundException('존재하지 않는 오답노트의 단어');
+
+    const word = await this.word.findUnique({
+      where: {
+        word_id: rand.word_id,
+      },
+    });
+    if (!word) throw new NotFoundException('존재하지 않는 단어');
+
+    const mean = await this.mean.findUnique({
+      where: {
+        word_id: word.word_id,
+      },
+    });
+
+    return {
+      word,
+      mean,
+    };
+  }
+
+  async findMaxIdFromWrong(userId: number) {
+    const counts = await this.wrong.count({
+      where: {
+        user_id: userId,
+      },
+    });
+
+    return counts;
+  }
+
+  async findWrongList(userId: number, page: number) {
+    const list = await this.wrong.findMany({
+      where: {
+        user_id: userId,
+      },
+      select: {
+        word_id: true,
+        Word: {
+          select: {
+            word: true,
+            Mean: {
+              select: {
+                mean: true,
+              },
+            },
+          },
+        },
+      },
+      take: 10,
+      skip: page * 10,
+    });
+
+    return list.map((e) => ({
+      word_id: e.word_id,
+      word: e.Word.word,
+      mean: e.Word.Mean.mean,
+    }));
+  }
+
+  async createWrong(userId: number, wordId: number) {
+    return await this.wrong.create({
+      data: {
+        word_id: wordId,
+        user_id: userId,
+      },
+    });
+  }
+
+  async deleteWrong(userId: number, wordId: number) {
+    return await this.wrong.delete({
+      where: {
+        user_id_word_id: {
+          user_id: userId,
+          word_id: wordId,
+        },
       },
     });
   }

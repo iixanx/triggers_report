@@ -14,6 +14,7 @@ import {
 } from './dto/request/postRand.request.dto';
 import { GetRandomResponseDto } from './dto/response/getRand.response.dto';
 import { PostRandomResponseDto } from './dto/response/postRand.response.dto';
+import { random } from 'src/util/random.util';
 
 @Injectable()
 export class QuizService implements IQuizService {
@@ -30,7 +31,7 @@ export class QuizService implements IQuizService {
     const { user } = request;
 
     const maxId = await this.prisma.findMaxIdFromWord(user.user_id);
-    const rand = Math.floor(Math.random() * maxId) + 1;
+    const rand = random(1, maxId);
 
     const randWord = await this.prisma.findRandWordByCount(user.user_id, rand);
     const anotherMeans = await this.prisma.findRandMeanList();
@@ -61,15 +62,23 @@ export class QuizService implements IQuizService {
     let earnedCoin = 0;
 
     try {
-      if (thisMean.mean_id === thisWord.mean.mean_id) {
-        isCorrect = true;
-        earnedCoin = Math.floor(Math.random() * (13 - 7 + 1)) + 7;
-        await this.prisma.updateUserCoinByIdAndCoin(user.user_id, earnedCoin);
-        await this.prisma.updateWordCorrectCount(thisWord.word.word_id);
-      } else {
-        await this.prisma.updateWordWrongCount(thisWord.word.word_id);
-      }
-      await this.prisma.createHistory(user.user_id, wordId, meanId, isCorrect);
+      await this.prisma.$transaction(async (tx) => {
+        if (thisMean.mean_id === thisWord.mean.mean_id) {
+          isCorrect = true;
+          earnedCoin = random(7, 13);
+          await this.prisma.updateUserCoinByIdAndCoin(user.user_id, earnedCoin);
+          await this.prisma.updateWordCorrectCount(thisWord.word.word_id);
+        } else {
+          await this.prisma.updateWordWrongCount(thisWord.word.word_id);
+          await this.prisma.createWrong(user.user_id, thisWord.word.word_id);
+        }
+        await this.prisma.createHistory(
+          user.user_id,
+          wordId,
+          meanId,
+          isCorrect,
+        );
+      });
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException('데이터베이스 트랜잭션 오류');
