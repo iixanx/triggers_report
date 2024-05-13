@@ -7,7 +7,10 @@ import {
   GetWordParamRequestDto,
   GetWordRequestDto,
 } from '../dto/request/getWord.request.dto';
-import { PostRandomRequestDto } from '../dto/request/postRandom.request.dto';
+import {
+  PostRandomParamRequestDto,
+  PostRandomRequestDto,
+} from '../dto/request/postRandom.request.dto';
 import { GetListResponseDto } from '../dto/response/getList.response.dto';
 import { GetRandomResponseDto } from '../dto/response/getRandom.response.dto';
 import { GetWordResponseDto } from '../dto/response/getWord.response.dto';
@@ -23,5 +26,8 @@ export interface IWrongController {
     param: GetWordParamRequestDto,
     request: GetWordRequestDto,
   ): Promise<GetWordResponseDto>;
-  postRand(request: PostRandomRequestDto): Promise<PostRandomResponseDto>;
+  postRand(
+    param: PostRandomParamRequestDto,
+    request: PostRandomRequestDto,
+  ): Promise<PostRandomResponseDto>;
 }

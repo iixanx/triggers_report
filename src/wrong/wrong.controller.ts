@@ -5,6 +5,7 @@ import {
   Inject,
   Logger,
   Param,
+  Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -19,7 +20,7 @@ import {
   GetWordParamRequestDto,
   GetWordRequestDto,
 } from './dto/request/getWord.request.dto';
-import { PostRandomRequestDto } from './dto/request/postRandom.request.dto';
+import { PostRandomParamRequestDto, PostRandomRequestDto } from './dto/request/postRandom.request.dto';
 import { GetListResponseDto } from './dto/response/getList.response.dto';
 import { GetRandomResponseDto } from './dto/response/getRandom.response.dto';
 import { GetWordResponseDto } from './dto/response/getWord.response.dto';
@@ -69,9 +70,14 @@ export class WrongController implements IWrongController {
     return data;
   }
 
+  @Post(':word_id')
   async postRand(
-    request: PostRandomRequestDto,
+    @Param() param: PostRandomParamRequestDto,
+    @Body() request: PostRandomRequestDto,
   ): Promise<PostRandomResponseDto> {
-    throw new Error('Method not implemented.');
+    this.logger.log('POST /wrong/rand');
+    const data = await this.service.postRand(param, request);
+
+    return data;
   }
 }

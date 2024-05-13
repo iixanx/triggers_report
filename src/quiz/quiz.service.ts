@@ -62,7 +62,7 @@ export class QuizService implements IQuizService {
     let earnedCoin = 0;
 
     try {
-      this.prisma.$transaction(async (tx) => {
+      await this.prisma.$transaction(async (tx) => {
         if (thisMean.mean_id === thisWord.mean.mean_id) {
           isCorrect = true;
           earnedCoin = random(7, 13);

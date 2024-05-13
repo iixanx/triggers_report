@@ -407,4 +407,15 @@ export class PrismaService
       },
     });
   }
+
+  async deleteWrong(userId: number, wordId: number) {
+    return await this.wrong.delete({
+      where: {
+        user_id_word_id: {
+          user_id: userId,
+          word_id: wordId,
+        },
+      },
+    });
+  }
 }

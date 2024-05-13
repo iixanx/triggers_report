@@ -1,4 +1,10 @@
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { IWrongService } from './interface/wrong.service.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
 import {
@@ -10,7 +16,10 @@ import {
   GetWordParamRequestDto,
   GetWordRequestDto,
 } from './dto/request/getWord.request.dto';
-import { PostRandomRequestDto } from './dto/request/postRandom.request.dto';
+import {
+  PostRandomParamRequestDto,
+  PostRandomRequestDto,
+} from './dto/request/postRandom.request.dto';
 import { GetRandomResponseDto } from './dto/response/getRandom.response.dto';
 import { GetWordResponseDto } from './dto/response/getWord.response.dto';
 import { PostRandomResponseDto } from './dto/response/postRandom.response.dto';
@@ -79,8 +88,52 @@ export class WrongService implements IWrongService {
   };
 
   postRand = async (
+    param: PostRandomParamRequestDto,
     request: PostRandomRequestDto,
   ): Promise<PostRandomResponseDto> => {
-    return;
+    const { wordId } = param;
+    const { meanId, user } = request;
+
+    const thisWord = await this.prisma.findWordById(wordId);
+    const thisMean = await this.prisma.findMeanById(meanId);
+    if (!thisWord || !thisMean)
+      throw new NotFoundException('오답노트에 등록되지 않은 아이디');
+
+    let earnedCoin = 0;
+    let isCorrect = false;
+
+    try {
+      await this.prisma.$transaction(async (tx) => {
+        if (thisMean.mean_id === thisWord.mean.mean_id) {
+          isCorrect = true;
+          earnedCoin = random(1, 7);
+          await this.prisma.updateUserCoinByIdAndCoin(user.user_id, earnedCoin);
+          await this.prisma.updateWordCorrectCount(thisWord.word.word_id);
+
+          const { word } = await this.prisma.findWordById(wordId);
+          if (word.correct_count >= word.wrong_count * 2)
+            await this.prisma.deleteWrong(user.user_id, word.word_id);
+        } else {
+          await this.prisma.updateWordWrongCount(thisWord.word.word_id);
+          await this.prisma.updateWordWrongCount(wordId);
+        }
+        await this.prisma.createHistory(
+          user.user_id,
+          wordId,
+          meanId,
+          isCorrect,
+        );
+      });
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException('데이터베이스 트랜잭션 오류');
+    }
+
+    return {
+      is_correct: isCorrect,
+      word: thisWord.word.word,
+      mean: thisMean.mean,
+      earned_coin: earnedCoin,
+    };
   };
 }
