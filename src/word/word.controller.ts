@@ -4,6 +4,7 @@ import {
   Get,
   Inject,
   Logger,
+  Param,
   Post,
   Query,
   UseGuards,
@@ -68,9 +69,17 @@ export class WordController implements IWordController {
 
     return data;
   }
-  async getWord(request: GetWordRequestDto): Promise<GetWordResponseDto> {
-    throw new Error('Method not implemented.');
+
+  @Get(':word_id')
+  async getWord(
+    @Param() request: GetWordRequestDto,
+  ): Promise<GetWordResponseDto> {
+    this.logger.log('/:word_id');
+    const data = await this.service.getWord(request);
+
+    return data;
   }
+
   async updateWord(
     request: UpdateWordRequestDto,
   ): Promise<UpdateWordResponseDto> {

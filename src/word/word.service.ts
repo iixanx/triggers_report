@@ -67,12 +67,7 @@ export class WordService implements IWordService {
 
     let wordList: Word[];
 
-    try {
-      wordList = await this.prisma.findWordList(user.user_id, pageNum);
-    } catch (error) {
-      this.logger.error(error);
-      throw new InternalServerErrorException('데이터베이스 트랜잭션 오류');
-    }
+    wordList = await this.prisma.findWordList(user.user_id, pageNum);
 
     if (wordList.every((e) => null))
       throw new NotFoundException('해당 페이지에 단어 없음');
@@ -98,9 +93,19 @@ export class WordService implements IWordService {
       mean: word.mean.mean,
     };
   };
+
   getWord = async (request: GetWordRequestDto): Promise<GetWordResponseDto> => {
-    return;
+    const { wordId } = request;
+
+    const word = await this.prisma.findWordById(Number(wordId));
+
+    return {
+      word_id: word.word.word_id,
+      word: word.word.word,
+      mean: word.mean.mean,
+    };
   };
+
   updateWord = async (
     request: UpdateWordRequestDto,
   ): Promise<UpdateWordResponseDto> => {

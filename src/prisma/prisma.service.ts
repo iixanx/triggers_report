@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   OnModuleDestroy,
   OnModuleInit,
 } from '@nestjs/common';
@@ -89,6 +90,9 @@ export class PrismaService
         word_id: wordId,
       },
     });
+
+    if(!word) throw new NotFoundException("존재하지 않는 아이디의 단어")
+
     const mean = await this.mean.findUnique({
       where: {
         word_id: word.word_id,
