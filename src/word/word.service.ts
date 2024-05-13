@@ -65,12 +65,9 @@ export class WordService implements IWordService {
     const { page } = query;
     const { user } = request;
 
-    const pageNum = page == undefined ? 0 : Number(page);
-    if (Number.isNaN(pageNum) && page) throw new BadRequestException();
-
     let wordList: Word[];
 
-    wordList = await this.prisma.findWordList(user.user_id, pageNum);
+    wordList = await this.prisma.findWordList(user.user_id, page);
 
     if (wordList.every((e) => null))
       throw new NotFoundException('해당 페이지에 단어 없음');
@@ -100,7 +97,7 @@ export class WordService implements IWordService {
   getWord = async (request: GetWordRequestDto): Promise<GetWordResponseDto> => {
     const { wordId } = request;
 
-    const word = await this.prisma.findWordById(Number(wordId));
+    const word = await this.prisma.findWordById(wordId);
 
     return {
       word_id: word.word.word_id,
@@ -116,17 +113,17 @@ export class WordService implements IWordService {
     const { wordId } = query;
     const { user } = request;
 
-    const thisWord = await this.prisma.findWordById(Number(wordId));
-    if (!thisWord || user.user_id !== thisWord.word.user_id)
+    const thisWord = await this.prisma.findWordById(wordId);
+    if (!thisWord || user.user_id !== wordId)
       throw new NotFoundException('존재하지 않는 아이디의 단어');
 
     const word = request.word ?? thisWord.word.word;
     const mean = request.mean ?? thisWord.mean.mean;
 
-    await this.prisma.updateWord(thisWord.word.word_id, word, mean);
+    await this.prisma.updateWord(wordId, word, mean);
 
     return {
-      word_id: thisWord.word.word_id,
+      word_id: wordId,
       word,
       mean,
     };

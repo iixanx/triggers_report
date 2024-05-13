@@ -1,8 +1,9 @@
 import { Optional } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { Expose } from 'class-transformer';
+import { Expose, Transform } from 'class-transformer';
 import {
   IsAlpha,
+  IsNumber,
   IsNumberString,
   IsOptional,
   IsString,
@@ -11,10 +12,12 @@ import {
 
 export class UpdateWordParamRequestDto {
   @Expose({
-    name: 'word_id',
+    name: "word_id"
   })
-  @IsNumberString()
-  wordId: string;
+  @Transform(e => Number(e))
+  @IsNumber()
+  @NotEquals(NaN)
+  wordId: number;
 }
 
 export class UpdateWordRequestDto {

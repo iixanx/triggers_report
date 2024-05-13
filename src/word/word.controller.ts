@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   Inject,
   Logger,
   Param,
@@ -92,6 +94,8 @@ export class WordController implements IWordController {
     return data;
   }
 
+  @Delete(':word_id')
+  @HttpCode(204)
   async deleteWord(
     request: DeleteWordRequestDto,
   ): Promise<DeleteWordResponseDto> {

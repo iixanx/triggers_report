@@ -1,10 +1,12 @@
-import { Expose } from 'class-transformer';
-import { IsNumberString } from 'class-validator';
+import { Expose, Transform } from 'class-transformer';
+import { IsNumber, IsNumberString, NotEquals } from 'class-validator';
 
 export class GetWordRequestDto {
   @Expose({
-    name: 'word_id',
+    name: "word_id"
   })
-  @IsNumberString()
-  wordId: string;
+  @Transform(e => Number(e))
+  @IsNumber()
+  @NotEquals(NaN)
+  wordId: number;
 }
