@@ -8,6 +8,7 @@ import {
   GetWordRequestDto,
 } from '../dto/request/getWord.request.dto';
 import { PostRandomRequestDto } from '../dto/request/postRandom.request.dto';
+import { GetListResponseDto } from '../dto/response/getList.response.dto';
 import { GetRandomResponseDto } from '../dto/response/getRandom.response.dto';
 import { GetWordResponseDto } from '../dto/response/getWord.response.dto';
 import { PostRandomResponseDto } from '../dto/response/postRandom.response.dto';
@@ -17,7 +18,7 @@ export interface IWrongService {
   getList: (
     query: GetListQueryRequestDto,
     request: GetListRequestDto,
-  ) => Promise<GetListRequestDto>;
+  ) => Promise<GetListResponseDto>;
   getWord: (
     param: GetWordParamRequestDto,
     request: GetWordRequestDto,

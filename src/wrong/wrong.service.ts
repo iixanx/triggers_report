@@ -1,7 +1,10 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { IWrongService } from './interface/wrong.service.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { GetListRequestDto } from './dto/request/getList.request.dto';
+import {
+  GetListQueryRequestDto,
+  GetListRequestDto,
+} from './dto/request/getList.request.dto';
 import { GetRandomRequestDto } from './dto/request/getRandom.request.dto';
 import { GetWordRequestDto } from './dto/request/getWord.request.dto';
 import { PostRandomRequestDto } from './dto/request/postRandom.request.dto';
@@ -9,6 +12,7 @@ import { GetRandomResponseDto } from './dto/response/getRandom.response.dto';
 import { GetWordResponseDto } from './dto/response/getWord.response.dto';
 import { PostRandomResponseDto } from './dto/response/postRandom.response.dto';
 import { random } from 'src/util/random.util';
+import { GetListResponseDto } from './dto/response/getList.response.dto';
 
 @Injectable()
 export class WrongService implements IWrongService {
@@ -40,12 +44,27 @@ export class WrongService implements IWrongService {
       means: anotherMeans,
     };
   };
-  getList = async (request: GetListRequestDto): Promise<GetListRequestDto> => {
-    return;
+
+  getList = async (
+    query: GetListQueryRequestDto,
+    request: GetListRequestDto,
+  ): Promise<GetListResponseDto> => {
+    const { page } = query;
+    const { user } = request;
+
+    const list = await this.prisma.findWrongList(user.user_id, page);
+    if (list.every((e) => e == null))
+      throw new NotFoundException(
+        '오답노트의 해당 페이지에 단어가 존재하지 않음',
+      );
+
+    return { words: list };
   };
+
   getWord = async (request: GetWordRequestDto): Promise<GetWordResponseDto> => {
     return;
   };
+
   postRand = async (
     request: PostRandomRequestDto,
   ): Promise<PostRandomResponseDto> => {

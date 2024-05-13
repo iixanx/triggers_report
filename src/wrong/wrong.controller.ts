@@ -4,11 +4,15 @@ import {
   Get,
   Inject,
   Logger,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { IWrongController } from './interface/wrong.controller.interface';
 import { WrongService } from './wrong.service';
-import { GetListRequestDto } from './dto/request/getList.request.dto';
+import {
+  GetListQueryRequestDto,
+  GetListRequestDto,
+} from './dto/request/getList.request.dto';
 import { GetRandomRequestDto } from './dto/request/getRandom.request.dto';
 import { GetWordRequestDto } from './dto/request/getWord.request.dto';
 import { PostRandomRequestDto } from './dto/request/postRandom.request.dto';
@@ -39,8 +43,15 @@ export class WrongController implements IWrongController {
     return data;
   }
 
-  async getList(request: GetListRequestDto): Promise<GetListResponseDto> {
-    throw new Error('Method not implemented.');
+  @Get('list')
+  async getList(
+    @Query() query: GetListQueryRequestDto,
+    @Body() request: GetListRequestDto,
+  ): Promise<GetListResponseDto> {
+    this.logger.log('GET /wrong/list');
+    const data = await this.service.getList(query, request);
+
+    return data;
   }
 
   async getWord(request: GetWordRequestDto): Promise<GetWordResponseDto> {

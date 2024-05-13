@@ -337,6 +337,35 @@ export class PrismaService
     return counts;
   }
 
+  async findWrongList(userId: number, page: number) {
+    const list = await this.wrong.findMany({
+      where: {
+        user_id: userId,
+      },
+      select: {
+        word_id: true,
+        Word: {
+          select: {
+            word: true,
+            Mean: {
+              select: {
+                mean: true,
+              },
+            },
+          },
+        },
+      },
+      take: 10,
+      skip: page * 10,
+    });
+
+    return list.map((e) => ({
+      word_id: e.word_id,
+      word: e.Word.word,
+      mean: e.Word.Mean.mean,
+    }));
+  }
+
   async createWrong(userId: number, wordId: number) {
     return await this.wrong.create({
       data: {
