@@ -12,9 +12,9 @@ import {
 
 export class UpdateWordParamRequestDto {
   @Expose({
-    name: "word_id"
+    name: 'word_id',
   })
-  @Transform(e => Number(e))
+  @Transform((e) => Number(e.value))
   @IsNumber()
   @NotEquals(NaN)
   wordId: number;

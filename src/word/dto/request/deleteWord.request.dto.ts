@@ -1,16 +1,16 @@
-import { Expose, Transform } from "class-transformer";
-import { IsNumber, IsNumberString, NotEquals } from "class-validator";
+import { User } from '@prisma/client';
+import { Expose, Transform } from 'class-transformer';
+import { IsNumber, IsNumberString, NotEquals } from 'class-validator';
 
 export class DeleteWordParamRequestDto {
   @Expose({
-    name: "word_id"
+    name: 'word_id',
   })
-  @Transform(e => Number(e))
+  @Transform(e => Number(e.value))
   @IsNumber()
-  @NotEquals(NaN)
   wordId: number;
 }
 
 export class DeleteWordRequestDto {
-  
+  user: User;
 }

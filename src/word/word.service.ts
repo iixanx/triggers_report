@@ -8,7 +8,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { IWordService } from './interface/word.service.interface';
-import { DeleteWordRequestDto } from './dto/request/deleteWord.request.dto';
+import {
+  DeleteWordParamRequestDto,
+  DeleteWordRequestDto,
+} from './dto/request/deleteWord.request.dto';
 import {
   GetListQueryRequestDto,
   GetListRequestDto,
@@ -114,7 +117,7 @@ export class WordService implements IWordService {
     const { user } = request;
 
     const thisWord = await this.prisma.findWordById(wordId);
-    if (!thisWord || user.user_id !== wordId)
+    if (!thisWord || user.user_id !== thisWord.word.user_id)
       throw new NotFoundException('존재하지 않는 아이디의 단어');
 
     const word = request.word ?? thisWord.word.word;
@@ -130,8 +133,23 @@ export class WordService implements IWordService {
   };
 
   deleteWord = async (
+    param: DeleteWordParamRequestDto,
     request: DeleteWordRequestDto,
   ): Promise<DeleteWordResponseDto> => {
+    const { wordId } = param;
+    const { user } = request;
+
+    const thisWord = await this.prisma.findWordById(wordId);
+    if (!thisWord || user.user_id !== thisWord.word.user_id)
+      throw new NotFoundException('존재하지 않는 아이디의 단어');
+
+    try {
+      await this.prisma.deleteWordById(wordId);
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException('데이터베이스 트랜잭션 오류');
+    }
+
     return;
   };
 }

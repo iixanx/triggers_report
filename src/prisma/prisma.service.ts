@@ -189,4 +189,12 @@ export class PrismaService
       }),
     ]);
   }
+
+  async deleteWordById(wordId: number) {
+    await this.word.delete({
+      where: {
+        word_id: wordId,
+      },
+    });
+  }
 }

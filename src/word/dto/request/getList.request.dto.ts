@@ -11,7 +11,7 @@ export class GetListQueryRequestDto {
   @Expose({
     name: 'page',
   })
-  @Transform((e) => (e == undefined ? 0 : Number(e)))
+  @Transform((e) => (e.value == undefined ? 0 : Number(e.value)))
   @IsNumber()
   @IsOptional()
   @NotEquals(NaN)

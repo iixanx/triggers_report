@@ -13,7 +13,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { IWordController } from './interface/word.controller.interface';
-import { DeleteWordRequestDto } from './dto/request/deleteWord.request.dto';
+import {
+  DeleteWordParamRequestDto,
+  DeleteWordRequestDto,
+} from './dto/request/deleteWord.request.dto';
 import {
   GetListQueryRequestDto,
   GetListRequestDto,
@@ -21,7 +24,10 @@ import {
 import { GetRandomRequestDto } from './dto/request/getRandom.request.dto';
 import { GetWordRequestDto } from './dto/request/getWord.request.dto';
 import { NewWordRequestDto } from './dto/request/newWord.request.dto';
-import { UpdateWordParamRequestDto, UpdateWordRequestDto } from './dto/request/updateWord.request.dto';
+import {
+  UpdateWordParamRequestDto,
+  UpdateWordRequestDto,
+} from './dto/request/updateWord.request.dto';
 import { DeleteWordResponseDto } from './dto/response/deleteWord.response.dto';
 import { GetListResponseDto } from './dto/response/getList.response.dto';
 import { GetRandomResponseDto } from './dto/response/getRandom.response.dto';
@@ -46,7 +52,7 @@ export class WordController implements IWordController {
   async newWord(
     @Body() request: NewWordRequestDto,
   ): Promise<NewWordResponseDto> {
-    this.logger.log('/new');
+    this.logger.log('POST /word/new');
     const data = await this.service.newWord(request);
 
     return data;
@@ -57,7 +63,7 @@ export class WordController implements IWordController {
     @Query() query: GetListQueryRequestDto,
     @Body() request: GetListRequestDto,
   ): Promise<GetListResponseDto> {
-    this.logger.log('/list');
+    this.logger.log('GET /word/list');
     const data = await this.service.getList(query, request);
 
     return data;
@@ -67,7 +73,7 @@ export class WordController implements IWordController {
   async getRand(
     @Body() request: GetRandomRequestDto,
   ): Promise<GetRandomResponseDto> {
-    this.logger.log('/rand');
+    this.logger.log('GET /word/rand');
     const data = await this.service.getRand(request);
 
     return data;
@@ -77,7 +83,7 @@ export class WordController implements IWordController {
   async getWord(
     @Param() request: GetWordRequestDto,
   ): Promise<GetWordResponseDto> {
-    this.logger.log('GET /:word_id');
+    this.logger.log('GET /word/:word_id');
     const data = await this.service.getWord(request);
 
     return data;
@@ -88,7 +94,7 @@ export class WordController implements IWordController {
     @Param() param: UpdateWordParamRequestDto,
     @Body() request: UpdateWordRequestDto,
   ): Promise<UpdateWordResponseDto> {
-    this.logger.log('PATCH /:word_id');
+    this.logger.log('PATCH /word/:word_id');
     const data = await this.service.updateWord(param, request);
 
     return data;
@@ -97,8 +103,12 @@ export class WordController implements IWordController {
   @Delete(':word_id')
   @HttpCode(204)
   async deleteWord(
-    request: DeleteWordRequestDto,
+    @Param() param: DeleteWordParamRequestDto,
+    @Body() request: DeleteWordRequestDto,
   ): Promise<DeleteWordResponseDto> {
-    throw new Error('Method not implemented.');
+    this.logger.log('DELETE /word/:word_id');
+    const data = await this.service.deleteWord(param, request);
+
+    return data;
   }
 }
