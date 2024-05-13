@@ -18,7 +18,20 @@ export class QuizService implements IQuizService {
   getRand = async (
     request: GetRandomRequestDto,
   ): Promise<GetRandomResponseDto> => {
-    return;
+    const { user } = request;
+
+    const maxId = await this.prisma.findMaxIdFromWord(user.user_id);
+    const rand = Math.floor(Math.random() * maxId) + 1;
+
+    const randWord = await this.prisma.findRandWordByCount(user.user_id, rand);
+    const anotherMeans = await this.prisma.findRandMeanList();
+    anotherMeans.push(randWord.mean);
+
+    return {
+      word_id: randWord.word.word_id,
+      word: randWord.word.word,
+      means: anotherMeans,
+    };
   };
   postRand = async (
     request: PostRandomRequestDto,
