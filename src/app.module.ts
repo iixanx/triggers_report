@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { WinstonModule } from 'nest-winston';
 import { WinstonInstance } from './util/winstonLgger.util';
 import { WordModule } from './word/word.module';
+import { QuizModule } from './quiz/quiz.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { WordModule } from './word/word.module';
     }),
     AuthModule,
     WordModule,
+    QuizModule,
   ],
 })
 export class AppModule {}
