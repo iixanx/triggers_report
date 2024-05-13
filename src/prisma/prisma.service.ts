@@ -37,8 +37,48 @@ export class PrismaService
         user_id: true,
         name: true,
         email: true,
+        password: true,
         is_admin: true,
         coin: true,
+      },
+    });
+  }
+
+  async findUserByEmail(email: string) {
+    return await this.user.findUnique({
+      where: { email },
+      select: {
+        user_id: true,
+        name: true,
+        email: true,
+        is_admin: true,
+        coin: true,
+      },
+    });
+  }
+
+  async createUser(
+    name: string,
+    email: string,
+    password: string,
+    isAdmin: boolean,
+  ) {
+    await this.user.create({
+      data: {
+        name,
+        email,
+        password,
+        is_admin: isAdmin,
+      },
+    });
+
+    return await this.findUserByEmail(email);
+  }
+
+  async deleteUserById(id: number) {
+    await this.user.delete({
+      where: {
+        user_id: id,
       },
     });
   }

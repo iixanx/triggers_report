@@ -3,19 +3,19 @@ import { createLogger, format, transports } from "winston";
 export const WinstonInstance = createLogger({
   exitOnError: false,
   transports: [
-    new transports.File({ filename: "warn.log", level: "warn" }),
-    new transports.File({ filename: "error.log", level: "error" }),
-    new transports.File({ filename: "crit.log", level: "crit" }),
+    new transports.File({ filename: "log/warn.log", level: "warn" }),
+    new transports.File({ filename: "log/error.log", level: "error" }),
+    new transports.File({ filename: "log/crit.log", level: "crit" }),
     new transports.Console({
       format: format.printf(
         ({ level, message }) =>
-          `[${level}] ${new Date().toISOString()} [DAUTH] - ${message}`,
+          `[${level}] ${new Date().toISOString()} [triggers_report] - ${message}`,
       ),
     }),
   ],
   format: format.printf(
     ({ level, message }) =>
-      `[${level}] ${new Date().toISOString()} [DAUTH] - ${message}`,
+      `[${level}] ${new Date().toISOString()} [triggers_report] - ${message}`,
   ),
 });
 

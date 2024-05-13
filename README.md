@@ -37,6 +37,12 @@
   이를 통해 코드의 확장 및 변경, 테스팅 등에서 효율성을 추구하였습니다.
 </p>
 
+<p>
+  winston logger를 사용하여 편리하고 확장성 있는 로깅 시스템을 구축하였습니다.
+  swagger docs를 활용하여 가독성 좋은 API 문서를 작성하였습니다.
+  Repository Pattern을 활용하여 SQL 처리 로직을 분리하였습니다.
+</p>
+
 </p>
 <p id="feature">
 <h1>기능 설명</h1>
@@ -62,12 +68,12 @@
         </tr>
         <tr>
           <td>Body</td>
-          <td>user_id</td>
+          <td>email</td>
           <td>
             <li>Type: String </li>
             <li>Unique Value</li>
             <li>Not Null</li>
-            <li>Length: 5 ~ 25</li>
+            <li>Length: 5 ~ 50</li>
           </td>
         </tr>
         <tr>
@@ -146,8 +152,9 @@
         </tr>
         <tr>
           <td>Body</td>
-          <td>user_id</td>
+          <td>email</td>
           <td>
+            <li>Type: String</li>
             <li>Not Null</li>
           </td>
         </tr>
@@ -155,6 +162,7 @@
           <td/>
           <td>password</td>
           <td>
+            <li>Type: String</li>
             <li>Not Null</li>
           </td>
         </tr>
@@ -277,19 +285,107 @@
         <tr>
           <td>401</td>
           <td>Unauthorized</td>
-          <td>Header의 authorized를 입력받지 못한 경우</td>
+          <td>Header의 authorization을 입력받지 못한 경우</td>
           <td/>
         </tr>
         <tr>
           <td>403</td>
           <td>Forbidden</td>
-          <td>JWT 토큰 계정이 일치하지 않는 경우</td>
+          <td>JWT 토큰 계정과 비밀번호가 일치하지 않는 경우</td>
           <td/>
         </tr>
         <tr>
           <td>404</td>
           <td>Not Found</td>
           <td>존재하지 않는 계정에 접근 시도</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>500</td>
+          <td>Internal Server Error</td>
+          <td>서버 처리 오류</td>
+          <td/>
+        </tr>
+      </table>
+    </details>
+  </li>
+  <li>
+    <details>
+      <summary>
+        <h3>GET /refresh</h3>
+        리프레시 토큰으로 액세스 토큰을 재발급받습니다.
+      </summary>
+      <h4>Request</h4>
+      <table>
+        <tr>
+          <th>위치</th>
+          <th>키</th>
+          <th>제약조건</th>
+        </tr>
+        <tr>
+          <td>Header</td>
+          <td>authorization</td>
+          <td>
+            <li>Type: String</li>
+            <li>Not Null</li>
+            <li>Refresh Token을 입력</li>
+            <li>Bearer Token</li>
+          </td>
+        </tr>
+      </table>
+      <h4>Response</h4>
+      <table>
+        <tr>
+          <th>응답 코드</th>
+          <th>코드명</th>
+          <th>발생하는 경우</th>
+          <th>응답값</th>
+        </tr>
+        <tr>
+          <td>200</td>
+          <td>OK</td>
+          <td>Access Token을 성공적으로 재발급받음</td>
+          <td>
+            <table>
+              <tr>
+                <th>키</th>
+                <th>제약조건</th>
+              </tr>
+              <tr>
+                <td>accessToken</td>
+                <td>
+                  <li>Type: String</li>
+                  <li>Not Null</li>
+                  <li>Bearer Token</li>
+                </td>
+              </tr>
+              <tr>
+                <td>refreshToken</td>
+                <td>
+                  <li>Type: String</li>
+                  <li>Not Null</li>
+                  <li>Bearer Token</li>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>400</td>
+          <td>Bad Request</td>
+          <td>authorization이 비어 있거나 Bearer Token 형식이 아닌 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>401</td>
+          <td>Unauthorized</td>
+          <td>authorization이 유효하지 않을 경우</td>
+          <td/>
+        </tr>
+        <tr>
+          <td>404</td>
+          <td>Not Found</td>
+          <td>존재하지 않는 계정에 대해 토큰 발급 요청</td>
           <td/>
         </tr>
         <tr>
