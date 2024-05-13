@@ -8,22 +8,25 @@ datasource db {
 }
 
 model User {
-  user_id  Int     @id @default(autoincrement())
+  user_id  Int       @id @default(autoincrement())
   name     String
-  email    String  @unique
+  email    String    @unique
   password String
-  is_admin Boolean @default(false)
-  coin     Int     @default(0)
+  is_admin Boolean   @default(false)
+  coin     Int       @default(0)
+  History  History[]
   Word     Word[]
 }
 
 model Word {
-  word_id     Int    @id @default(autoincrement())
-  user_id     Int
-  word        String
-  wrong_count Int    @default(0)
-  Mean        Mean?
-  User        User   @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  word_id       Int       @id @default(autoincrement())
+  user_id       Int
+  word          String
+  wrong_count   Int       @default(0)
+  correct_count Int       @default(0)
+  History       History[]
+  Mean          Mean?
+  User          User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
 
   @@unique([user_id, word])
   @@index([user_id], map: "Word_user_id_fkey")
@@ -40,12 +43,17 @@ model Mean {
 }
 
 model History {
-  user_id Int
-  word_id Int
-  mean_id Int
-  count   Int  @default(0)
-  Mean    Mean @relation(fields: [mean_id], references: [mean_id], onDelete: Cascade)
+  history_id Int      @id @default(autoincrement())
+  user_id    Int
+  word_id    Int
+  mean_id    Int
+  is_correct Boolean
+  createdat  DateTime @default(now())
+  Mean       Mean     @relation(fields: [mean_id], references: [mean_id], onDelete: Cascade)
+  User       User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  Word       Word     @relation(fields: [word_id], references: [word_id], onDelete: Cascade)
 
-  @@id([user_id, word_id])
   @@index([mean_id], map: "History_mean_id_fkey")
+  @@index([user_id], map: "History_user_id_fkey")
+  @@index([word_id], map: "History_word_id_fkey")
 }

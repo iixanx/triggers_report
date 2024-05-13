@@ -64,7 +64,7 @@ export class PrismaService
     password: string,
     isAdmin: boolean,
   ) {
-    await this.user.create({
+    return await this.user.create({
       data: {
         name,
         email,
@@ -72,8 +72,6 @@ export class PrismaService
         is_admin: isAdmin,
       },
     });
-
-    return await this.findUserByEmail(email);
   }
 
   async deleteUserById(id: number) {
@@ -225,6 +223,28 @@ export class PrismaService
     ]);
   }
 
+  async updateWordCorrectCount(wordId: number) {
+    await this.word.update({
+      where: {
+        word_id: wordId,
+      },
+      data: {},
+    });
+  }
+
+  async updateWordWrongCount(wordId: number) {
+    await this.word.update({
+      where: {
+        word_id: wordId,
+      },
+      data: {
+        wrong_count: {
+          increment: 1,
+        },
+      },
+    });
+  }
+
   async deleteWordById(wordId: number) {
     await this.word.delete({
       where: {
@@ -237,6 +257,44 @@ export class PrismaService
     return await this.mean.findUnique({
       where: {
         mean_id: meanId,
+      },
+    });
+  }
+
+  async updateUserCoinByIdAndCoin(userId: number, coin: number) {
+    await this.user.update({
+      where: {
+        user_id: userId,
+      },
+      data: {
+        coin: {
+          increment: coin
+        },
+      },
+    });
+
+    return await this.user.findUnique({
+      where: {
+        user_id: userId,
+      },
+      select: {
+        coin: true,
+      },
+    });
+  }
+
+  async createHistory(
+    userId: number,
+    wordId: number,
+    meanId: number,
+    isCorrect: boolean,
+  ) {
+    return await this.history.create({
+      data: {
+        user_id: userId,
+        word_id: wordId,
+        mean_id: meanId,
+        is_correct: isCorrect,
       },
     });
   }

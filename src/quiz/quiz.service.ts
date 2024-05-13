@@ -1,4 +1,10 @@
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { IQuizService } from './interface/quiz.service.interface';
 import { GetRandomRequestDto } from './dto/request/getRand.request.dto';
@@ -52,9 +58,22 @@ export class QuizService implements IQuizService {
     if (!thisWord || !thisMean)
       throw new NotFoundException('단어장에 등록되지 않은 아이디');
 
-    if (thisMean.mean_id === thisWord.mean.mean_id) isCorrect = true;
+    let earnedCoin = 0;
 
-    const earnedCoin = Math.floor(Math.random() * (13 - 7 + 1)) + 7;
+    try {
+      if (thisMean.mean_id === thisWord.mean.mean_id) {
+        isCorrect = true;
+        earnedCoin = Math.floor(Math.random() * (13 - 7 + 1)) + 7;
+        await this.prisma.updateUserCoinByIdAndCoin(user.user_id, earnedCoin);
+        await this.prisma.updateWordCorrectCount(thisWord.word.word_id);
+      } else {
+        await this.prisma.updateWordWrongCount(thisWord.word.word_id);
+      }
+      await this.prisma.createHistory(user.user_id, wordId, meanId, isCorrect);
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException('데이터베이스 트랜잭션 오류');
+    }
 
     return {
       is_correct: isCorrect,
