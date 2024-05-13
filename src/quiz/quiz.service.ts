@@ -1,8 +1,11 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { IQuizService } from './interface/quiz.service.interface';
 import { GetRandomRequestDto } from './dto/request/getRand.request.dto';
-import { PostRandomRequestDto } from './dto/request/postRand.request.dto';
+import {
+  PostRandomQueryRequestDto,
+  PostRandomRequestDto,
+} from './dto/request/postRand.request.dto';
 import { GetRandomResponseDto } from './dto/response/getRand.response.dto';
 import { PostRandomResponseDto } from './dto/response/postRand.response.dto';
 
@@ -33,9 +36,31 @@ export class QuizService implements IQuizService {
       means: anotherMeans,
     };
   };
+
   postRand = async (
+    query: PostRandomQueryRequestDto,
     request: PostRandomRequestDto,
   ): Promise<PostRandomResponseDto> => {
-    return;
+    const { wordId } = query;
+    const { meanId, user } = request;
+
+    let isCorrect: boolean = false;
+
+    const thisMean = await this.prisma.findMeanById(meanId);
+    const thisWord = await this.prisma.findWordById(wordId);
+
+    if (!thisWord || !thisMean)
+      throw new NotFoundException('단어장에 등록되지 않은 아이디');
+
+    if (thisMean.mean_id === thisWord.mean.mean_id) isCorrect = true;
+
+    const earnedCoin = Math.floor(Math.random() * (13 - 7 + 1)) + 7;
+
+    return {
+      is_correct: isCorrect,
+      word: thisWord.word.word,
+      mean: thisMean.mean,
+      earned_coin: earnedCoin,
+    };
   };
 }

@@ -232,4 +232,12 @@ export class PrismaService
       },
     });
   }
+
+  async findMeanById(meanId: number) {
+    return await this.mean.findUnique({
+      where: {
+        mean_id: meanId,
+      },
+    });
+  }
 }

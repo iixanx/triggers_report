@@ -4,11 +4,16 @@ import {
   Get,
   Inject,
   Logger,
+  Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { IQuizController } from './interface/quiz.controller.interface';
 import { GetRandomRequestDto } from './dto/request/getRand.request.dto';
-import { PostRandomRequestDto } from './dto/request/postRand.request.dto';
+import {
+  PostRandomQueryRequestDto,
+  PostRandomRequestDto,
+} from './dto/request/postRand.request.dto';
 import { GetRandomResponseDto } from './dto/response/getRand.response.dto';
 import { PostRandomResponseDto } from './dto/response/postRand.response.dto';
 import { QuizService } from './quiz.service';
@@ -35,9 +40,14 @@ export class QuizController implements IQuizController {
     return data;
   }
 
+  @Post('rand')
   async postRand(
-    request: PostRandomRequestDto,
+    @Query() query: PostRandomQueryRequestDto,
+    @Body() request: PostRandomRequestDto,
   ): Promise<PostRandomResponseDto> {
-    throw new Error('Method not implemented.');
+    this.logger.log('POST /quiz/rand');
+    const data = await this.service.postRand(query, request);
+
+    return data;
   }
 }
