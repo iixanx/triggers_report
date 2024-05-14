@@ -1836,7 +1836,7 @@
   <li>
     <details>
       <summary>
-        <h3>GET /user</h3>
+        <h3>GET /words</h3>
         특정 사용자의 단어장을 조회할 수 있습니다. <br/>
         페이지 당 최대 10개의 단어를 조회할 수 있습니다.
       </summary>
@@ -1970,7 +1970,7 @@
   <li>
     <details>
       <summary>
-        <h3>GET /quiz</h3>
+        <h3>GET /results</h3>
         특정 사용자가 푼 퀴즈와 결과가 포함된 리스트를 조회합니다.
       </summary>
       <h4>Request</h4>

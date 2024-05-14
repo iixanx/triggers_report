@@ -6,6 +6,7 @@ import { WinstonInstance } from './util/winstonLgger.util';
 import { WordModule } from './word/word.module';
 import { QuizModule } from './quiz/quiz.module';
 import { WrongModule } from './wrong/wrong.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { WrongModule } from './wrong/wrong.module';
     WordModule,
     QuizModule,
     WrongModule,
+    AdminModule,
   ],
 })
 export class AppModule {}
