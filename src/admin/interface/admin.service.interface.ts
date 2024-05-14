@@ -1,7 +1,4 @@
-import {
-  GetUserQuizResultsQueryRequestDto,
-  GetUserQuizResultsRequestDto,
-} from '../dto/request/getUserQuizResults.request.dto';
+import { GetUserQuizResultsQueryRequestDto } from '../dto/request/getUserQuizResults.request.dto';
 import { GetUsersQueryRequestDto } from '../dto/request/getUsers.request.dto';
 import { GetUserWordsQueryRequestDto } from '../dto/request/getUserWords.request.dto';
 import { GetUserQuizResultsResponseDto } from '../dto/response/getUserQuizResults.response.dto';
@@ -15,6 +12,5 @@ export interface IAdminService {
   ) => Promise<GetUserWordsResponseDto>;
   getUserQuizResults: (
     query: GetUserQuizResultsQueryRequestDto,
-    request: GetUserQuizResultsRequestDto,
   ) => Promise<GetUserQuizResultsResponseDto>;
 }

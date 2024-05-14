@@ -1,4 +1,3 @@
-import { User } from '@prisma/client';
 import { Expose, Transform } from 'class-transformer';
 import { IsNumber, Min, NotEquals } from 'class-validator';
 
@@ -20,8 +19,4 @@ export class GetUserQuizResultsQueryRequestDto {
   @NotEquals(NaN)
   @Min(0)
   page: number;
-}
-
-export class GetUserQuizResultsRequestDto {
-  user: User;
 }

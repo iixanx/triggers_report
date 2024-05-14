@@ -1,4 +1,3 @@
-import { User } from '@prisma/client';
 import { Expose, Transform } from 'class-transformer';
 import { IsNumber, NotEquals, Min } from 'class-validator';
 

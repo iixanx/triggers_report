@@ -1,10 +1,7 @@
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { IAdminService } from './interface/admin.service.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
-import {
-  GetUserQuizResultsQueryRequestDto,
-  GetUserQuizResultsRequestDto,
-} from './dto/request/getUserQuizResults.request.dto';
+import { GetUserQuizResultsQueryRequestDto } from './dto/request/getUserQuizResults.request.dto';
 import { GetUsersQueryRequestDto } from './dto/request/getUsers.request.dto';
 import { GetUserWordsQueryRequestDto } from './dto/request/getUserWords.request.dto';
 import { GetUsersResponseDto } from './dto/response/getUsers.response.dto';
@@ -47,8 +44,12 @@ export class AdminService implements IAdminService {
 
   getUserQuizResults = async (
     query: GetUserQuizResultsQueryRequestDto,
-    request: GetUserQuizResultsRequestDto,
   ): Promise<GetUserQuizResultsResponseDto> => {
-    return;
+    const { userId, page } = query;
+    const list = await this.prisma.findHistoryList(userId, page);
+    if (list.every((e) => !e))
+      throw new NotFoundException('페이지에 해당하는 결과 없음');
+
+    return { quizzes: list };
   };
 }

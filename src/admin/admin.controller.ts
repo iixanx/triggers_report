@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Get,
   Inject,
@@ -9,10 +8,7 @@ import {
 } from '@nestjs/common';
 import { IAdminController } from './interface/admin.controller.interface';
 import { AdminService } from './admin.service';
-import {
-  GetUserQuizResultsQueryRequestDto,
-  GetUserQuizResultsRequestDto,
-} from './dto/request/getUserQuizResults.request.dto';
+import { GetUserQuizResultsQueryRequestDto } from './dto/request/getUserQuizResults.request.dto';
 import { GetUsersQueryRequestDto } from './dto/request/getUsers.request.dto';
 import { GetUserWordsQueryRequestDto } from './dto/request/getUserWords.request.dto';
 import { GetUserQuizResultsResponseDto } from './dto/response/getUserQuizResults.response.dto';
@@ -32,7 +28,7 @@ export class AdminController implements IAdminController {
     this.service = service;
   }
 
-  @Get('/users')
+  @Get('users')
   async getUsers(
     @Query() query: GetUsersQueryRequestDto,
   ): Promise<GetUsersResponseDto> {
@@ -42,7 +38,7 @@ export class AdminController implements IAdminController {
     return data;
   }
 
-  @Get('/words')
+  @Get('words')
   async getUserWords(
     @Query() query: GetUserWordsQueryRequestDto,
   ): Promise<GetUserWordsResponseDto> {
@@ -52,12 +48,12 @@ export class AdminController implements IAdminController {
     return data;
   }
 
+  @Get('results')
   async getUserQuizResults(
-    query: GetUserQuizResultsQueryRequestDto,
-    request: GetUserQuizResultsRequestDto,
+    @Query() query: GetUserQuizResultsQueryRequestDto,
   ): Promise<GetUserQuizResultsResponseDto> {
     this.logger.log('GET /admin/results');
-    const data = await this.service.getUserQuizResults(query, request);
+    const data = await this.service.getUserQuizResults(query);
 
     return data;
   }

@@ -3,6 +3,7 @@ import {
   IsAlpha,
   IsArray,
   IsBoolean,
+  IsDate,
   IsNumber,
   IsOptional,
   IsString,
@@ -26,7 +27,7 @@ export class UserQuizResult {
   @IsNumber()
   @NotEquals(NaN)
   @Min(0)
-  wordId: number;
+  word_id: number;
 
   @Expose({
     name: 'word',
@@ -45,7 +46,7 @@ export class UserQuizResult {
     name: 'has_correct',
   })
   @IsBoolean()
-  hasCorrect: boolean;
+  has_correct: boolean;
 
   @Expose({
     name: 'earned_coin',
@@ -54,5 +55,11 @@ export class UserQuizResult {
   @NotEquals(NaN)
   @Min(0)
   @Max(13)
-  earnedCoin: number;
+  earned_coin: number;
+
+  @Expose({
+    name: 'created_at'
+  })
+  @IsDate()
+  created_at: Date;
 }

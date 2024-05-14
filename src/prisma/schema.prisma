@@ -45,15 +45,16 @@ model Mean {
 }
 
 model History {
-  user_id    Int
-  word_id    Int
-  mean_id    Int
-  is_correct Boolean
-  history_id Int      @id @default(autoincrement())
-  created_at DateTime @default(now())
-  Mean       Mean     @relation(fields: [mean_id], references: [mean_id], onDelete: Cascade)
-  User       User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  Word       Word     @relation(fields: [word_id], references: [word_id], onDelete: Cascade)
+  user_id     Int
+  word_id     Int
+  mean_id     Int
+  history_id  Int      @id @default(autoincrement())
+  created_at  DateTime @default(now())
+  earned_coin Int      @default(0)
+  has_correct Boolean
+  Mean        Mean     @relation(fields: [mean_id], references: [mean_id], onDelete: Cascade)
+  User        User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  Word        Word     @relation(fields: [word_id], references: [word_id], onDelete: Cascade)
 
   @@index([mean_id], map: "History_mean_id_fkey")
   @@index([user_id], map: "History_user_id_fkey")
