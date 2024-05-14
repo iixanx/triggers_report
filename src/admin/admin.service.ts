@@ -6,10 +6,7 @@ import {
   GetUserQuizResultsRequestDto,
 } from './dto/request/getUserQuizResults.request.dto';
 import { GetUsersQueryRequestDto } from './dto/request/getUsers.request.dto';
-import {
-  GetUserWordsQueryRequestDto,
-  GetUserWordsRequestDto,
-} from './dto/request/getUserWords.request.dto';
+import { GetUserWordsQueryRequestDto } from './dto/request/getUserWords.request.dto';
 import { GetUsersResponseDto } from './dto/response/getUsers.response.dto';
 import { GetUserQuizResultsResponseDto } from './dto/response/getUserQuizResults.response.dto';
 import { GetUserWordsResponseDto } from './dto/response/getUserWords.response.dto';
@@ -38,9 +35,14 @@ export class AdminService implements IAdminService {
 
   getUserWords = async (
     query: GetUserWordsQueryRequestDto,
-    request: GetUserWordsRequestDto,
   ): Promise<GetUserWordsResponseDto> => {
-    return;
+    const { userId, page } = query;
+
+    const list = await this.prisma.findWordList(userId, page);
+    if (list.every((e) => !e))
+      throw new NotFoundException('페이지에 해당하는 단어 없음');
+
+    return { words: list };
   };
 
   getUserQuizResults = async (

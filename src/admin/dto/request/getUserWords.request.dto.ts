@@ -21,7 +21,3 @@ export class GetUserWordsQueryRequestDto {
   @Min(0)
   page: number;
 }
-
-export class GetUserWordsRequestDto {
-  user: User;
-}

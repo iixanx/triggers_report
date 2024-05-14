@@ -137,13 +137,28 @@ export class PrismaService
   }
 
   async findWordList(userId: number, page: number) {
-    return await this.word.findMany({
+    const list = await this.word.findMany({
       where: {
         user_id: userId,
+      },
+      select: {
+        word_id: true,
+        word: true,
+        Mean: {
+          select: {
+            mean: true,
+          },
+        },
       },
       take: 10,
       skip: page * 10,
     });
+
+    return list.map((word) => ({
+      word_id: word.word_id,
+      word: word.word,
+      mean: word.Mean.mean,
+    }));
   }
 
   async findRandMeanList() {

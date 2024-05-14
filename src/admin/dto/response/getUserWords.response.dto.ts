@@ -14,7 +14,7 @@ export class UserWord {
   })
   @IsNumber()
   @Min(0)
-  wordId: number;
+  word_id: number;
 
   @Expose({
     name: 'word',

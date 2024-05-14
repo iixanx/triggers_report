@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Inject,
@@ -13,10 +14,7 @@ import {
   GetUserQuizResultsRequestDto,
 } from './dto/request/getUserQuizResults.request.dto';
 import { GetUsersQueryRequestDto } from './dto/request/getUsers.request.dto';
-import {
-  GetUserWordsQueryRequestDto,
-  GetUserWordsRequestDto,
-} from './dto/request/getUserWords.request.dto';
+import { GetUserWordsQueryRequestDto } from './dto/request/getUserWords.request.dto';
 import { GetUserQuizResultsResponseDto } from './dto/response/getUserQuizResults.response.dto';
 import { GetUsersResponseDto } from './dto/response/getUsers.response.dto';
 import { GetUserWordsResponseDto } from './dto/response/getUserWords.response.dto';
@@ -44,12 +42,12 @@ export class AdminController implements IAdminController {
     return data;
   }
 
+  @Get('/words')
   async getUserWords(
-    query: GetUserWordsQueryRequestDto,
-    request: GetUserWordsRequestDto,
+    @Query() query: GetUserWordsQueryRequestDto,
   ): Promise<GetUserWordsResponseDto> {
     this.logger.log('GET /admin/words');
-    const data = await this.service.getUserWords(query, request);
+    const data = await this.service.getUserWords(query);
 
     return data;
   }
