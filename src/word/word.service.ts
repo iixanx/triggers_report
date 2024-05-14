@@ -24,14 +24,17 @@ import {
   UpdateWordRequestDto,
 } from './dto/request/updateWord.request.dto';
 import { DeleteWordResponseDto } from './dto/response/deleteWord.response.dto';
-import { GetListResponseDto } from './dto/response/getList.response.dto';
+import {
+  GetListResponseDto,
+  WordOfList,
+} from './dto/response/getList.response.dto';
 import { GetRandomResponseDto } from './dto/response/getRandom.response.dto';
 import { GetWordResponseDto } from './dto/response/getWord.response.dto';
 import { NewWordResponseDto } from './dto/response/newWord.response.dto';
 import { UpdateWordResponseDto } from './dto/response/updateWord.response.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Word } from '@prisma/client';
 import { random } from 'src/util/random.util';
+import { Word } from '@prisma/client';
 
 @Injectable()
 export class WordService implements IWordService {
@@ -69,7 +72,7 @@ export class WordService implements IWordService {
     const { page } = query;
     const { user } = request;
 
-    let wordList: Word[];
+    let wordList: WordOfList[];
 
     wordList = await this.prisma.findWordList(user.user_id, page);
 

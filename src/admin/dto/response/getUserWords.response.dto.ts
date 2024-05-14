@@ -1,16 +1,18 @@
 import { Expose } from 'class-transformer';
-import { IsAlpha, IsNumber, IsString, Min, NotEquals } from 'class-validator';
+import { IsAlpha, IsArray, IsNumber, IsOptional, IsString, Length, Min } from 'class-validator';
 
-export class GetListResponseDto {
-  words: WordOfList[];
+export class GetUserWordsResponseDto {
+  @IsArray()
+  @IsOptional()
+  @Length(0, 10)
+  words: UserWord[];
 }
 
-export class WordOfList {
+export class UserWord {
   @Expose({
     name: 'word_id',
   })
   @IsNumber()
-  @NotEquals(NaN)
   @Min(0)
   word_id: number;
 

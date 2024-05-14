@@ -58,6 +58,19 @@ export class PrismaService
     });
   }
 
+  async findUserList(page: number) {
+    return await this.user.findMany({
+      select: {
+        user_id: true,
+        name: true,
+        email: true,
+        coin: true,
+      },
+      skip: page * 10,
+      take: 10,
+    });
+  }
+
   async createUser(
     name: string,
     email: string,
@@ -124,13 +137,28 @@ export class PrismaService
   }
 
   async findWordList(userId: number, page: number) {
-    return await this.word.findMany({
+    const list = await this.word.findMany({
       where: {
         user_id: userId,
+      },
+      select: {
+        word_id: true,
+        word: true,
+        Mean: {
+          select: {
+            mean: true,
+          },
+        },
       },
       take: 10,
       skip: page * 10,
     });
+
+    return list.map((word) => ({
+      word_id: word.word_id,
+      word: word.word,
+      mean: word.Mean.mean,
+    }));
   }
 
   async findRandMeanList() {
@@ -283,18 +311,53 @@ export class PrismaService
     });
   }
 
+  async findHistoryList(userId: number, page: number) {
+    const list = await this.history.findMany({
+      where: {
+        user_id: userId,
+      },
+      select: {
+        word_id: true,
+        Word: {
+          select: {
+            word: true,
+          },
+        },
+        Mean: {
+          select: {
+            mean: true,
+          },
+        },
+        has_correct: true,
+        earned_coin: true,
+        created_at: true,
+      },
+      skip: page * 10,
+      take: 10,
+    });
+
+    return list.map((history) => ({
+      word_id: history.word_id,
+      word: history.Word.word,
+      mean: history.Mean.mean,
+      has_correct: history.has_correct,
+      earned_coin: history.earned_coin,
+      created_at: history.created_at,
+    }));
+  }
+
   async createHistory(
     userId: number,
     wordId: number,
     meanId: number,
-    isCorrect: boolean,
+    hasCorrect: boolean,
   ) {
     return await this.history.create({
       data: {
         user_id: userId,
         word_id: wordId,
         mean_id: meanId,
-        is_correct: isCorrect,
+        has_correct: hasCorrect,
       },
     });
   }
