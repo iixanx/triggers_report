@@ -1,14 +1,18 @@
-import { Controller, Inject, Logger, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  Logger,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { IAdminController } from './interface/admin.controller.interface';
 import { AdminService } from './admin.service';
 import {
   GetUserQuizResultsQueryRequestDto,
   GetUserQuizResultsRequestDto,
 } from './dto/request/getUserQuizResults.request.dto';
-import {
-  GetUsersQueryRequestDto,
-  GetUsersRequestDto,
-} from './dto/request/getUsers.request.dto';
+import { GetUsersQueryRequestDto } from './dto/request/getUsers.request.dto';
 import {
   GetUserWordsQueryRequestDto,
   GetUserWordsRequestDto,
@@ -17,8 +21,9 @@ import { GetUserQuizResultsResponseDto } from './dto/response/getUserQuizResults
 import { GetUsersResponseDto } from './dto/response/getUsers.response.dto';
 import { GetUserWordsResponseDto } from './dto/response/getUserWords.response.dto';
 import { AuthGuard } from 'src/util/auth.guard';
+import { AdminGuard } from 'src/util/admin.guard';
 
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, AdminGuard)
 @Controller('admin')
 export class AdminController implements IAdminController {
   constructor(
@@ -29,12 +34,12 @@ export class AdminController implements IAdminController {
     this.service = service;
   }
 
+  @Get('/users')
   async getUsers(
-    query: GetUsersQueryRequestDto,
-    request: GetUsersRequestDto,
+    @Query() query: GetUsersQueryRequestDto,
   ): Promise<GetUsersResponseDto> {
     this.logger.log('GET /admin/users');
-    const data = await this.service.getUsers(query, request);
+    const data = await this.service.getUsers(query);
 
     return data;
   }

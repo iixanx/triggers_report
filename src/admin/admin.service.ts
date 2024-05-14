@@ -1,14 +1,11 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { IAdminService } from './interface/admin.service.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
 import {
   GetUserQuizResultsQueryRequestDto,
   GetUserQuizResultsRequestDto,
 } from './dto/request/getUserQuizResults.request.dto';
-import {
-  GetUsersQueryRequestDto,
-  GetUsersRequestDto,
-} from './dto/request/getUsers.request.dto';
+import { GetUsersQueryRequestDto } from './dto/request/getUsers.request.dto';
 import {
   GetUserWordsQueryRequestDto,
   GetUserWordsRequestDto,
@@ -21,17 +18,22 @@ import { GetUserWordsResponseDto } from './dto/response/getUserWords.response.dt
 export class AdminService implements IAdminService {
   constructor(
     @Inject(Logger) private readonly logger: Logger,
-    private service: PrismaService,
+    private prisma: PrismaService,
   ) {
     this.logger = logger;
-    this.service = service;
+    this.prisma = prisma;
   }
 
   getUsers = async (
     query: GetUsersQueryRequestDto,
-    request: GetUsersRequestDto,
   ): Promise<GetUsersResponseDto> => {
-    return;
+    const { page } = query;
+
+    const list = await this.prisma.findUserList(page);
+    if (list.every((e) => !e))
+      throw new NotFoundException('페이지에 해당하는 사용자 없음');
+
+    return { users: list };
   };
 
   getUserWords = async (

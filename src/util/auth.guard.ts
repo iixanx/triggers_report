@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     @Inject(JwtService) private jwt: JwtService,
     private prisma: PrismaService,
-    private logger: Logger,
+    @Inject(Logger) private logger: Logger,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

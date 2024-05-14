@@ -2,10 +2,7 @@ import {
   GetUserQuizResultsQueryRequestDto,
   GetUserQuizResultsRequestDto,
 } from '../dto/request/getUserQuizResults.request.dto';
-import {
-  GetUsersQueryRequestDto,
-  GetUsersRequestDto,
-} from '../dto/request/getUsers.request.dto';
+import { GetUsersQueryRequestDto } from '../dto/request/getUsers.request.dto';
 import {
   GetUserWordsQueryRequestDto,
   GetUserWordsRequestDto,
@@ -15,10 +12,7 @@ import { GetUsersResponseDto } from '../dto/response/getUsers.response.dto';
 import { GetUserWordsResponseDto } from '../dto/response/getUserWords.response.dto';
 
 export interface IAdminController {
-  getUsers(
-    query: GetUsersQueryRequestDto,
-    request: GetUsersRequestDto,
-  ): Promise<GetUsersResponseDto>;
+  getUsers(query: GetUsersQueryRequestDto): Promise<GetUsersResponseDto>;
   getUserWords(
     query: GetUserWordsQueryRequestDto,
     request: GetUserWordsRequestDto,

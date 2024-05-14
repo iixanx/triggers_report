@@ -22,7 +22,7 @@ export class User {
   })
   @IsNumber()
   @Min(0)
-  userId: number;
+  user_id: number;
 
   @Expose({
     name: 'name',

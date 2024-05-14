@@ -58,6 +58,19 @@ export class PrismaService
     });
   }
 
+  async findUserList(page: number) {
+    return await this.user.findMany({
+      select: {
+        user_id: true,
+        name: true,
+        email: true,
+        coin: true,
+      },
+      skip: page * 10,
+      take: 10,
+    });
+  }
+
   async createUser(
     name: string,
     email: string,
