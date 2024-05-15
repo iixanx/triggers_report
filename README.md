@@ -3,7 +3,6 @@
 (주)트리거스 입사 과제 진행을 위해 제작한 레포지토리입니다.
 
 소스 코드 중 루트 경로의 <code>triggers.erd.drawio</code>에서 ERD를 확인할 수 있습니다. <br/>
-<code>test</code> 폴더에서 e2e 테스트 코드를 확인하실 수 있으며, 각 도메인 별 단위 테스트 코드는 도메인 별로 나뉜 폴더 내에서 확인 가능합니다.
 
 <p style="border:1px;color:#b3b3b3;">
 <h1>목차 Contents table</h1>
@@ -23,8 +22,10 @@
     </ol>
   </li>
   <li><a href="#execute">실행 방법</a></li>
+  <!--
   <li> <a href="#3">트러블 슈팅</a><br/></li>
   <li> <a href="#4">회고</a><br/></li>
+  -->
 </ol>
 </p>
 
@@ -48,7 +49,6 @@
 <h1>기능 설명</h1>
 도메인 별로 기능을 설명합니다.<br/>
 각각의 리스트를 클릭할 경우 상세 요청 및 응답 객체에 대한 설명이 나옵니다.<br/>
-서버를 작동시킬 경우 <a href="http://localhost:8080/docs">http://localhost:8080/docs</a>에서 API 명세서를 확인하실 수 있습니다.
 <h2 id="auth">인증 도메인 ("/auth")</h2>
 사용자 회원가입, 로그인, 회원탈퇴 등을 지원합니다.
 <ul>
@@ -2141,14 +2141,9 @@ pnpm build # 빌드
 pnpm start:dev # Develop mode 실행
 
 pnpm start:prod # Production mode 실행
-
-pnpm test:unit # Unit Test 실행
-
-pnpm test:e2e # Integrated Test 실행
-
-pnpm test:cov # coverage 확인
 ```
 
+<!--
 </p>
 <p id="trouble">
 <h1>트러블 슈팅</h1>
@@ -2156,3 +2151,4 @@ pnpm test:cov # coverage 확인
 <p id="4">
 <h1>회고</h1>
 </p>
+-->

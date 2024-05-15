@@ -139,6 +139,8 @@ export class PrismaService
       },
     });
 
+    if (mean === null) throw new NotFoundException('단어의 뜻이 존재하지 않음');
+
     return {
       word,
       mean,
