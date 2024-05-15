@@ -12,7 +12,7 @@ import {
 import { IAuthService } from './interface/auth.service.interface';
 import { SignUpRequestDto } from './dto/request/signup.request.dto';
 import { SignUpResponseDto } from './dto/response/signup.response.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { compare, hash } from 'bcrypt';
 import { SignInResponseDto } from './dto/response/siginin.response.dto';
 import { SignInRequestDto } from './dto/request/signin.request.dto';
@@ -20,7 +20,7 @@ import { UnsubRequestDto } from './dto/request/unsub.request.dto';
 import { UnsubResponseDto } from './dto/response/unsub.response.dto';
 import { RefreshRequestDto } from './dto/request/refresh.request.dto';
 import { RefreshResponseDto } from './dto/response/refresh.response.dto';
-import { TokenRequestDto } from 'src/dto/request/token.request.dto';
+import { TokenRequestDto } from '../dto/request/token.request.dto';
 import { AuthUtil } from './util/auth.util';
 
 @Injectable()
@@ -97,7 +97,7 @@ export class AuthService implements IAuthService {
       throw new InternalServerErrorException('데이터베이스 트랜잭션 오류');
     }
 
-    return;
+    return {};
   };
 
   refresh = async (

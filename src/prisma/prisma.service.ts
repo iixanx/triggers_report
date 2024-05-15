@@ -1,12 +1,13 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   OnModuleDestroy,
   OnModuleInit,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Mean, Prisma, PrismaClient, Word } from '@prisma/client';
+import { Mean, Prisma, PrismaClient, User, Word } from '@prisma/client';
 
 @Injectable()
 export class PrismaService
@@ -31,8 +32,8 @@ export class PrismaService
     await this.$disconnect();
   }
 
-  async findUserById(userId: number) {
-    return await this.user.findUnique({
+  async findUserById(userId: number): Promise<User> {
+    const user = await this.user.findUnique({
       where: { user_id: userId },
       select: {
         user_id: true,
@@ -43,6 +44,10 @@ export class PrismaService
         coin: true,
       },
     });
+
+    if (user === null) throw new NotFoundException('찾을 수 없는 사용자');
+
+    return user;
   }
 
   async findUserByEmail(email: string) {
@@ -110,6 +115,8 @@ export class PrismaService
       },
     });
 
+    if (!mean) throw new NotFoundException('단어의 뜻이 존재하지 않음');
+
     return {
       word,
       mean,
@@ -123,6 +130,8 @@ export class PrismaService
       },
       skip: skip - 1,
     });
+
+    if (word === null) throw new NotFoundException('존재하지 않는 단어');
 
     const mean = await this.mean.findUnique({
       where: {
@@ -154,11 +163,22 @@ export class PrismaService
       skip: page * 10,
     });
 
-    return list.map((word) => ({
-      word_id: word.word_id,
-      word: word.word,
-      mean: word.Mean.mean,
-    }));
+    return list.map(async (word) => {
+      const mean = await this.mean.findUnique({
+        where: {
+          word_id: word.word_id,
+        },
+      });
+
+      if (mean === null)
+        throw new NotFoundException('단어의 뜻이 존재하지 않음');
+
+      return {
+        word_id: word.word_id,
+        word: word.word,
+        mean: mean.mean,
+      };
+    });
   }
 
   async findRandMeanList() {
@@ -170,6 +190,8 @@ export class PrismaService
       const mean = await this.mean.findFirst({
         skip: rand - 1,
       });
+      if (mean === null)
+        throw new NotFoundException('단어의 뜻이 존재하지 않음');
       meanList.push(mean);
     }
 
@@ -205,28 +227,44 @@ export class PrismaService
     return counts;
   }
 
-  async createWord(userId: number, word: string, mean: string) {
-    let newWord: Word;
-    await this.$transaction(
-      async (tx) => {
-        newWord = await tx.word.create({
-          data: {
-            user_id: userId,
-            word,
-          },
-        });
+  async createWord(userId: number, word: string, mean: string): Promise<Word> {
+    let newWord: Word | null;
+    try {
+      await this.$transaction(
+        async (tx) => {
+          newWord = await tx.word.create({
+            data: {
+              user_id: userId,
+              word,
+            },
+          });
 
-        await tx.mean.create({
-          data: {
-            word_id: newWord.word_id,
-            mean,
-          },
-        });
+          await tx.mean.create({
+            data: {
+              word_id: newWord.word_id,
+              mean,
+            },
+          });
+        },
+        {
+          isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead,
+        },
+      );
+    } catch (error) {
+      throw new InternalServerErrorException('데이터베이스 트랜잭션 오류');
+    }
+
+    newWord = await this.word.findUnique({
+      where: {
+        user_id_word: {
+          user_id: userId,
+          word,
+        },
       },
-      {
-        isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead,
-      },
-    );
+    });
+
+    if (newWord === null) throw new NotFoundException('찾을 수 없는 단어');
+
     return newWord;
   }
 
@@ -375,11 +413,6 @@ export class PrismaService
         Word: {
           select: {
             word: true,
-            Mean: {
-              select: {
-                mean: true,
-              },
-            },
           },
         },
       },
@@ -388,10 +421,17 @@ export class PrismaService
     if (!wrong)
       throw new NotFoundException('오답노트에 존재하지 않는 아이디의 단어');
 
+    const mean = await this.mean.findUnique({
+      where: {
+        word_id: wordId,
+      },
+    });
+    if (mean === null) throw new NotFoundException('단어의 뜻이 존재하지 않음');
+
     return {
       word_id: wrong.word_id,
       word: wrong.Word.word,
-      mean: wrong.Word.Mean.mean,
+      mean: mean.mean,
     };
   }
 
@@ -416,6 +456,7 @@ export class PrismaService
         word_id: word.word_id,
       },
     });
+    if (mean === null) throw new NotFoundException('단어의 뜻이 존재하지 않음');
 
     return {
       word,
@@ -455,11 +496,21 @@ export class PrismaService
       skip: page * 10,
     });
 
-    return list.map((e) => ({
-      word_id: e.word_id,
-      word: e.Word.word,
-      mean: e.Word.Mean.mean,
-    }));
+    return list.map(async (e) => {
+      const mean = await this.mean.findUnique({
+        where: {
+          word_id: e.word_id,
+        },
+      });
+      if (mean === null)
+        throw new NotFoundException('단어의 뜻이 존재하지 않음');
+
+      return {
+        word_id: e.word_id,
+        word: e.Word.word,
+        mean: mean.mean,
+      };
+    });
   }
 
   async createWrong(userId: number, wordId: number) {

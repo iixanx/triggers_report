@@ -13,7 +13,7 @@ export class GetListResponseDto {
     name: 'words',
   })
   @IsArray()
-  words: Words[];
+  words: Promise<Words>[];
 }
 
 export class Words {

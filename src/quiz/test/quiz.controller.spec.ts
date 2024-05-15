@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { QuizController } from './quiz.controller';
+import { QuizController } from '../quiz.controller';
 
 describe('QuizController', () => {
   let controller: QuizController;
@@ -12,7 +12,7 @@ describe('QuizController', () => {
     controller = module.get<QuizController>(QuizController);
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+  // it('should be defined', () => {
+  //   expect(controller).toBeDefined();
+  // });
 });

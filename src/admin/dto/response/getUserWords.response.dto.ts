@@ -5,7 +5,7 @@ export class GetUserWordsResponseDto {
   @IsArray()
   @IsOptional()
   @Length(0, 10)
-  words: UserWord[];
+  words: Promise<UserWord>[];
 }
 
 export class UserWord {
