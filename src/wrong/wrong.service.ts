@@ -101,6 +101,11 @@ export class WrongService implements IWrongService {
     const thisWord = await this.prisma.findWordById(wordId);
     const thisMean = await this.prisma.findMeanById(meanId);
 
+    if (thisWord === null)
+      throw new NotFoundException('단어가 단어장에 존재하지 않음');
+    if (thisMean === null)
+      throw new NotFoundException('단어의 뜻이 존재하지 않음');
+
     let earnedCoin = 0;
     let isCorrect = false;
 

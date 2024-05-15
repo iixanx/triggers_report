@@ -72,7 +72,7 @@ export class WordService implements IWordService {
     const { page } = query;
     const { user } = request;
 
-    let wordList: WordOfList[];
+    let wordList: Promise<WordOfList>[];
 
     wordList = await this.prisma.findWordList(user.user_id, page);
 
@@ -154,6 +154,6 @@ export class WordService implements IWordService {
       throw new InternalServerErrorException('데이터베이스 트랜잭션 오류');
     }
 
-    return;
+    return {};
   };
 }

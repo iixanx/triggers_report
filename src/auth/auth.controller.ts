@@ -41,6 +41,7 @@ export class AuthController implements IAuthController {
     return data;
   }
 
+  @HttpCode(200)
   @Post('signin')
   async signin(@Body() request: SignInRequestDto): Promise<SignInResponseDto> {
     this.logger.log('/signin');

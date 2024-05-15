@@ -2,7 +2,7 @@ import { Expose } from 'class-transformer';
 import { IsAlpha, IsNumber, IsString, Min, NotEquals } from 'class-validator';
 
 export class GetListResponseDto {
-  words: WordOfList[];
+  words: Promise<WordOfList>[];
 }
 
 export class WordOfList {
